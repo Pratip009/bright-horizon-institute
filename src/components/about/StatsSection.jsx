@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 // Counter Component
 // eslint-disable-next-line react/prop-types
@@ -21,10 +23,11 @@ const Counter = ({ value, label, duration = 2000 }) => {
   }, [value, duration]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-      <h2 className="text-5xl font-extrabold sm:text-6xl" style={{
-        color:'#fe4a55'
-      }}>
+    <div
+      className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      data-aos="fade-up" // AOS fade-up animation for the counter
+    >
+      <h2 className="text-5xl font-extrabold sm:text-6xl" style={{ color: '#fe4a55' }}>
         {count.toLocaleString()}+
       </h2>
       <p className="mt-3 text-lg font-medium text-gray-700 uppercase tracking-wide">
@@ -37,6 +40,14 @@ const Counter = ({ value, label, duration = 2000 }) => {
 
 // Stats Section Component
 const StatsSection = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Duration of the animation
+      easing: 'ease-in-out',
+      once: true, // Animation happens only once
+    });
+  }, []);
+
   const stats = [
     { value: 56000, label: "Finished Sessions" },
     { value: 10000, label: "Enrolled Learners" },

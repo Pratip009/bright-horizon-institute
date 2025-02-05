@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
+// Stats Card Component
 // eslint-disable-next-line react/prop-types
 const StatsCard = ({ targetNumber, label, bgColor, style }) => {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
+    AOS.init({ duration: 1000, easing: "ease-in-out", once: true });
+
     let start = 1;
     // eslint-disable-next-line react/prop-types
     const end = parseInt(targetNumber.replace(/\D/g, ""));
@@ -25,7 +30,8 @@ const StatsCard = ({ targetNumber, label, bgColor, style }) => {
   return (
     <div
       className={`p-8 text-center rounded-xl shadow-2xl ${bgColor} hover:scale-105 transition-transform duration-300 relative transform-gpu`}
-      style={style} // Apply the custom style here
+      style={style}
+      data-aos="zoom-in"
     >
       <h2 className="text-red-500 text-4xl font-extrabold">{count}+</h2>
       <p className="text-gray-800 font-semibold uppercase text-sm tracking-wide mt-2">
@@ -35,6 +41,7 @@ const StatsCard = ({ targetNumber, label, bgColor, style }) => {
   );
 };
 
+// Testimonials Component
 const testimonials = [
   {
     text: "First, I would like to start with Ms. Nicole. She is an amazing teacher. She explains the information in a way that you'll understand and make the class fun at the same time...",
@@ -61,9 +68,13 @@ const TestimonialSlider = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 p-6 rounded-lg shadow-xl relative max-w-lg mx-auto transition-opacity duration-500 ease-in-out">
+    <div
+      className="bg-gray-100 p-6 rounded-lg shadow-xl relative max-w-lg mx-auto transition-opacity duration-500 ease-in-out"
+      data-aos="fade-up"
+      data-aos-delay="500"
+    >
       <div className="h-32 overflow-y-hidden">
-        <p className="text-gray-800 text-lg italic leading-relaxed" style={{fontFamily:'Nunito'}}>
+        <p className="text-gray-800 text-lg italic leading-relaxed" style={{ fontFamily: "Nunito" }}>
           &quot;{testimonials[index].text}&quot;
         </p>
       </div>
@@ -85,28 +96,37 @@ const TestimonialSlider = () => {
   );
 };
 
+// Flexible Study Section
 const FlexibleStudySection = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
+    });
+  }, []);
+
   return (
     <section className="bg-white py-20 px-6">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
         {/* Left Content */}
-        <div>
-          <p className="text-red-500 font-semibold uppercase tracking-wider">
+        <div data-aos="fade-up">
+          <p className="text-red-500 font-semibold uppercase tracking-wider" data-aos="fade-up" data-aos-delay="200">
             Expert Learning
           </p>
 
-          <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-            Flexible Study at Your Own Pace, <span className="mr-2"></span>
+          <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl" data-aos="fade-up" data-aos-delay="400">
+            Flexible Study at Your Own Pace, According to Your Own
+            <span className="mr-2"></span>
             <div className="relative inline-flex">
               <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
               <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-                According to Your Own Needs
+                Needs
               </h1>
             </div>
           </h1>
-          <p className="mt-8 text-base text-black sm:text-xl">
-            Bright Horizon Institute was founded in 2010 in Newark, NJ. It is a
-            vocational school that offers a variety of courses...
+          <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up" data-aos-delay="600">
+            Bright Horizon Institute was founded in 2010 in Newark, NJ. It is a vocational school that offers a variety of courses...
           </p>
           <div className="mt-8">
             <TestimonialSlider />
@@ -115,48 +135,49 @@ const FlexibleStudySection = () => {
 
         {/* Right Stats Section */}
         <div className="flex flex-wrap justify-center gap-8 relative">
-          <div className="relative top-0">
+          <div className="relative top-0" data-aos="fade-left">
             <StatsCard
               targetNumber="56000"
               label="Finished Sessions"
+              data-aos="flip-left"
               bgColor=""
               style={{
-                backgroundImage:
-                  "linear-gradient(to right, #bf953f, #fcf6ba,#b38728, #fbf5b7,#aa771c)",
-              }} // Correct gradient background
+                backgroundImage: "linear-gradient(to right, #bf953f, #fcf6ba,#b38728, #fbf5b7,#aa771c)",
+              }}
             />
           </div>
-          <div className="relative top-4">
+          <div className="relative top-4" data-aos="fade-right">
             <StatsCard
               targetNumber="10000"
               label="Enrolled Learners"
+              data-aos="flip-left"
+              
               bgColor=""
               style={{
-                backgroundImage:
-                  "linear-gradient(to right, #666666, #f2f2f2,#666666)",
-              }} // Correct gradient background
+                backgroundImage: "linear-gradient(to right, #666666, #f2f2f2,#666666)",
+              }}
             />
           </div>
-          <div className="relative top-2">
+          <div className="relative top-2" data-aos="fade-left">
             <StatsCard
               targetNumber="50"
               label="Expert Instructors"
               bgColor=""
+              data-aos="flip-left"
               style={{
-                backgroundImage:
-                  "linear-gradient(to right, #666666, #f2f2f2,#666666)",
-              }} // Correct gradient background
+                backgroundImage: "linear-gradient(to right, #666666, #f2f2f2,#666666)",
+              }}
             />
           </div>
 
-          <div className="relative top-6">
+          <div className="relative top-6" data-aos="fade-right">
             <StatsCard
               targetNumber="100"
               label="Satisfaction Rate"
               bgColor=""
+              data-aos="flip-left"
               style={{
-                backgroundImage:
-                  "linear-gradient(to right, #bf953f, #fcf6ba,#b38728, #fbf5b7,#aa771c)",
+                backgroundImage: "linear-gradient(to right, #bf953f, #fcf6ba,#b38728, #fbf5b7,#aa771c)",
               }}
             />
           </div>

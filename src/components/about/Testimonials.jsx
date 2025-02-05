@@ -1,4 +1,7 @@
 import PropTypes from "prop-types"; // Import PropTypes
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const testimonials = [
   {
@@ -32,7 +35,10 @@ const testimonials = [
 
 // TestimonialCard Component
 const TestimonialCard = ({ testimonial }) => (
-  <div className="flex flex-col overflow-hidden shadow-xl">
+  <div
+    className="flex flex-col overflow-hidden shadow-xl"
+    data-aos="fade-up" // Adding AOS fade-up animation
+  >
     <div className="flex flex-col justify-between flex-1 p-6 bg-white lg:py-8 lg:px-7">
       <div className="flex-1">
         <div className="flex items-center">
@@ -87,17 +93,37 @@ TestimonialCard.propTypes = {
 
 // TestimonialSection Component
 const TestimonialSection = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Set the duration of the animation
+      easing: "ease-in-out", // Apply easing for smooth animation
+      once: true, // Animation runs only once
+    });
+  }, []);
+
   return (
     <section className="py-12 bg-white sm:py-16 lg:py-20">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           <div className="text-center">
-            <p className="text-lg font-medium text-gray-600">
+            <p className="text-base text-black sm:text-xl">
               People have said how good Bright Horizon Institute
             </p>
-            <h2 className="mt-4 text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl">
-              Our happy clients say about us
-            </h2>
+
+            <h1
+              className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
+              data-aos="fade-up"
+              data-aos-delay="400" // Adding a slight delay for this text animation
+            >
+              Our happy clients say
+              <span className="mr-2"></span>
+              <div className="relative inline-flex">
+                <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
+                <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+                  about us
+                </h1>
+              </div>
+            </h1>
           </div>
 
           <div className="relative mt-10 md:mt-24">
@@ -116,6 +142,7 @@ const TestimonialSection = () => {
                 <TestimonialCard
                   key={testimonial.id}
                   testimonial={testimonial}
+                  data-aos="fade-up" // Add fade-up animation to each card
                 />
               ))}
             </div>

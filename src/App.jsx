@@ -9,11 +9,22 @@ import Courses from "./Pages/Courses/Courses";
 import CourseDetail from "./Pages/Courses/CourseDetail";
 import About from "./Pages/About/About";
 import Contact from "./Pages/Contact/Contact";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+import AOS from "aos";
+
 
 const App = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // animation duration in milliseconds
+      once: false, // whether animation should happen only once
+      easing: "ease-in-out", // animation easing
+    });
+  }, []);
   return (
     <Router>
-     
+    
       <Header />
       <div className="content">
         <Routes>

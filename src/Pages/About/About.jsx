@@ -1,11 +1,15 @@
 // src/components/About.js
 
+import { useEffect } from "react";
 import ExpertSkills from "../../components/about/ExpertSkills";
 import StatsSection from "../../components/about/StatsSection";
 import Testimonials from "../../components/about/Testimonials";
 import Banner from "../../components/Banner";
 
 const About = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="container mt-5">
       {" "}

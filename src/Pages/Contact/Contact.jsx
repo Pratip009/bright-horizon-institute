@@ -1,6 +1,15 @@
 import Banner from "../../components/Banner";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 const Contact = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration
+      easing: "ease-in-out",
+      once: true, // Animation occurs only once
+    });
+  }, []);
   return (
     <>
       <div className="container mt-5">
@@ -16,16 +25,34 @@ const Contact = () => {
             <div className="-mx-4 flex flex-wrap lg:justify-between">
               <div className="w-full px-4 lg:w-1/2 xl:w-6/12">
                 <div className="mb-12 max-w-[570px] lg:mb-0">
-                  <span className="mb-4 block text-base font-semibold text-primary">
-                    Contact Us
+                  <span
+                    className="text-sm text-red-500 font-semibold"
+                    data-aos="fade-up"
+                  >
+                    CONTACT US
                   </span>
-                  <h2 className="mb-6 text-[32px] font-bold uppercase text-dark dark:text-white sm:text-[40px] lg:text-[36px] xl:text-[40px]">
-                    GET IN TOUCH WITH US
-                  </h2>
-                  <p className="mb-9 text-base leading-relaxed text-body-color dark:text-dark-6">
+
+                  <h1
+                    className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
+                    data-aos="fade-up"
+                    data-aos-delay="200"
+                  >
+                    Get in touch <span className="mr-2"></span>
+                    <div className="relative inline-flex">
+                      <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
+                      <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+                        with us
+                      </h1>
+                    </div>
+                  </h1>
+                  <p
+                    className="mt-8 text-base text-black sm:text-xl"
+                    data-aos="fade-left"
+                    data-aos-delay="400"
+                  >
                     Will be glad to host you in our office:
                   </p>
-                  <div className="mb-8 flex w-full max-w-[370px]">
+                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -50,7 +77,7 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="mb-8 flex w-full max-w-[370px]">
+                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -90,7 +117,7 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="mb-8 flex w-full max-w-[370px]">
+                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -114,7 +141,7 @@ const Contact = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="mb-8 flex w-full max-w-[370px]">
+                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +164,7 @@ const Contact = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full px-4 lg:w-1/2 xl:w-5/12">
+              <div className="w-full px-4 lg:w-1/2 xl:w-5/12" data-aos="fade-left">
                 <div className="relative rounded-lg bg-white p-8 shadow-lg dark:bg-dark-2 sm:p-12">
                   <form>
                     <ContactInputBox
@@ -193,7 +220,7 @@ const Contact = () => {
             </div>
           </div>
         </section>
-        <div className="mt-10 w-full h-[400px]">
+        <div className="mt-10 w-full h-[400px]" data-aos="fade-up" >
           <iframe
             title="Google Map"
             width="100%"

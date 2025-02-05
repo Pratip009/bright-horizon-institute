@@ -2,6 +2,7 @@
 
 import { Link } from 'react-router-dom';
 import Banner from '../../components/Banner';
+import { useEffect } from 'react';
 
 const courses = [
   { id: 1, name: 'React for Beginners' },
@@ -10,6 +11,9 @@ const courses = [
 ];
 
 const Courses = () => {
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   return (
     <div className="container mt-5">
       <div className="" style={{ marginTop: "7rem" }}>

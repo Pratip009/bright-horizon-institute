@@ -1,31 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const BusinessInitiative = () => {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration
+      once: true, // Runs only once
+      easing: "ease-in-out", // Easing type
+    });
+  }, []);
+
   return (
     <div className="bg-white relative">
-      <section className="py-10 sm:py-16 lg:py-24">
+      <section
+        className="py-10 sm:py-16 lg:py-24"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid items-center grid-cols-1 gap-12 lg:grid-cols-2">
             <div>
-              <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+              <h1
+                className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
+                data-aos="fade-right"
+              >
                 Collaborate remotely, with
                 <div className="relative inline-flex">
                   <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-                  <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+                  <h1
+                    className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
+                    data-aos="zoom-in"
+                    data-aos-delay="200"
+                  >
                     Bright Horizon Institute.
                   </h1>
                 </div>
               </h1>
 
-              <p className="mt-8 text-base text-black sm:text-xl">
+              <p
+                className="mt-8 text-base text-black sm:text-xl"
+                data-aos="fade-up"
+                data-aos-delay="300"
+              >
                 Our mission is to provide students with high-quality training
                 programs and prepare them for a competitive job market.
               </p>
 
-              <div className="mt-10 sm:flex sm:items-center sm:space-x-8">
+              <div
+                className="mt-10 sm:flex sm:items-center sm:space-x-8"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
                 <Link
                   to="#"
                   className="inline-flex items-center justify-center px-10 py-4 text-base font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 focus:bg-orange-600"
@@ -43,6 +72,8 @@ const BusinessInitiative = () => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    data-aos="zoom-in"
+                    data-aos-delay="500"
                   >
                     <path
                       fill="#F97316"
@@ -64,7 +95,7 @@ const BusinessInitiative = () => {
               </div>
             </div>
 
-            <div>
+            <div data-aos="fade-left" data-aos-delay="600">
               <img
                 className="w-full"
                 src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/2/hero-img.png"
@@ -77,7 +108,10 @@ const BusinessInitiative = () => {
 
       {/* Video Modal */}
       {isVideoOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+          data-aos="fade-in"
+        >
           <div className="relative w-full max-w-3xl">
             <button
               className="absolute top-2 right-2 text-white text-3xl"
