@@ -1,3 +1,7 @@
+
+
+// export default CourseCard;
+import { Link } from "react-router-dom";
 import { FaClock } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
@@ -19,15 +23,22 @@ const CourseCard = ({ courses }) => {
 
           {/* Course details */}
           <div className="times">
-            <p className="info" style={{ display: "flex", alignItems: "center" }}>
+            <p
+              className="info"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <FaClock className="mr-1 text-red-500" />
               {course.time}
             </p>
-            <p className="info" style={{ display: "flex", alignItems: "center" }}>
+            <p
+              className="info"
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <SlCalender className="mr-1 text-red-500" />
               {course.programTime}
             </p>
           </div>
+
           <p className="info">
             <b>Certification:</b> {course.certification}
           </p>
@@ -39,15 +50,17 @@ const CourseCard = ({ courses }) => {
           </p>
 
           {/* Button */}
-          <button
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            View Programs <FaRegArrowAltCircleRight className="ml-3" />
-          </button>
+          <Link to={`/courses/${course.id}`}>
+            <button
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              View Programs <FaRegArrowAltCircleRight className="ml-3" />
+            </button>
+          </Link>
         </div>
       ))}
     </div>

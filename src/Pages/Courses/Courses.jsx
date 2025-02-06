@@ -1,37 +1,30 @@
-// src/components/Courses.js
-
-import { Link } from 'react-router-dom';
-import Banner from '../../components/Banner';
-import { useEffect } from 'react';
-
-const courses = [
-  { id: 1, name: 'React for Beginners' },
-  { id: 2, name: 'Advanced JavaScript' },
-  { id: 3, name: 'Web Development Bootcamp' },
-];
+import { useState, useEffect } from "react";
+import CourseCard from "../../components/HomeComponents/CourseCard";
+import Banner from "../../components/Banner";
 
 const Courses = () => {
+  const [courses, setCourses] = useState([]);
+
   useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+    // Example of fetching the courses from a JSON file or an API
+    fetch("/courses.json")
+      .then((response) => response.json())
+      .then((data) => setCourses(data))
+      .catch((error) => console.error("Error fetching courses:", error));
+  }, []);
+
   return (
     <div className="container mt-5">
       <div className="" style={{ marginTop: "7rem" }}>
         <Banner
           text="Courses"
-          gradient="bg-gradient-to-r from-purple-100 to-blue-500"
+          imageUrl="https://www.commonsense.org/sites/default/files/png/2020-12/teachers-essential-guide-to-coding-in-the-classroom-article.png"
         />
       </div>
-     
-      <ul className="list-group">
-        {courses.map(course => (
-          <li key={course.id} className="list-group-item">
-            <Link to={`/courses/${course.id}`} className="text-decoration-none">
-              {course.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <section className="pt-12 pb-12 sm:pb-16 lg:pt-8">
+      <CourseCard courses={courses} />
+      </section>
+    
     </div>
   );
 };

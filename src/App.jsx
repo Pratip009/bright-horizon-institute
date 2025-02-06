@@ -26,6 +26,7 @@ const App = () => {
     <Router>
     
       <Header />
+    
       <div className="content">
         <Routes>
           <Route path="/" element={<Home />} />

@@ -17,7 +17,7 @@ const About = () => {
       <div className="" style={{ marginTop: "7rem" }}>
         <Banner
           text="About Us"
-          gradient="bg-gradient-to-r from-green-100 to-blue-500"
+          imageUrl="https://www.shutterstock.com/image-photo/elementary-school-science-class-over-600nw-1795173874.jpg"
         />
       </div>
       <ExpertSkills />

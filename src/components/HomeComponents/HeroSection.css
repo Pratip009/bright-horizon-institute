@@ -3,7 +3,7 @@
 .carousel {
   width: 100vw;
   height: 80vh; /* Default height for larger screens */
-  margin-top: 70px;
+
   z-index: 20;
   overflow: hidden;
   position: relative;
@@ -262,7 +262,7 @@
 @media screen and (max-width: 480px) {
   .carousel {
     height: 80vh; /* Adjust height for very small screens */
-    margin-top: 60px;
+
   }
   .carousel .list .item{
     width: 100px;

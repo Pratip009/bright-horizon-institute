@@ -16,7 +16,7 @@ const Contact = () => {
         <div className="" style={{ marginTop: "7rem" }}>
           <Banner
             text="Contact Us"
-            gradient="bg-gradient-to-r from-red-100 to-yellow-500"
+            imageUrl="https://www.coderobo.ai/static/media/teachers_love_coderobo.f7ab8b62.jpg"
           />
         </div>
 
@@ -52,7 +52,10 @@ const Contact = () => {
                   >
                     Will be glad to host you in our office:
                   </p>
-                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
+                  <div
+                    className="mb-8 flex w-full max-w-[370px]"
+                    data-aos="fade-up"
+                  >
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -77,7 +80,10 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
+                  <div
+                    className="mb-8 flex w-full max-w-[370px]"
+                    data-aos="fade-up"
+                  >
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -117,7 +123,10 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
+                  <div
+                    className="mb-8 flex w-full max-w-[370px]"
+                    data-aos="fade-up"
+                  >
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         width="32"
@@ -141,7 +150,10 @@ const Contact = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="mb-8 flex w-full max-w-[370px]" data-aos="fade-up">
+                  <div
+                    className="mb-8 flex w-full max-w-[370px]"
+                    data-aos="fade-up"
+                  >
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +176,10 @@ const Contact = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full px-4 lg:w-1/2 xl:w-5/12" data-aos="fade-left">
+              <div
+                className="w-full px-4 lg:w-1/2 xl:w-5/12"
+                data-aos="fade-left"
+              >
                 <div className="relative rounded-lg bg-white p-8 shadow-lg dark:bg-dark-2 sm:p-12">
                   <form>
                     <ContactInputBox
@@ -220,7 +235,7 @@ const Contact = () => {
             </div>
           </div>
         </section>
-        <div className="mt-10 w-full h-[400px]" data-aos="fade-up" >
+        <div className="mt-10 w-full h-[400px]" data-aos="fade-up">
           <iframe
             title="Google Map"
             width="100%"

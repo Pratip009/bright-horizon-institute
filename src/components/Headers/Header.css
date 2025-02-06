@@ -40,5 +40,7 @@
     justify-content: flex-end; /* Align items to the right */
   }
   
-
+  header {
+    z-index: 50 !important;
+  }
   

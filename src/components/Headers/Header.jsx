@@ -1,40 +1,35 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/slider/bhiwhite.svg";
-import { FaSearch } from "react-icons/fa";
-import { FaHome } from "react-icons/fa";
-import { MdVoiceChat } from "react-icons/md";
-import { MdCastForEducation } from "react-icons/md";
-import { FaPhoneVolume } from "react-icons/fa6";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import logo from "../../assets/slider/bhilogo.svg";
+import { FaSearch, FaHome, FaPhoneVolume } from "react-icons/fa";
+import { MdVoiceChat, MdCastForEducation } from "react-icons/md";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const location = useLocation();
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-[#212121] shadow-md">
+    <header className="sticky top-0 left-0 w-full z-50 bg-[#14ff72ee] shadow-md">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        {/* Navbar */}
         <nav className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link
-              to="/"
-              className="text-2xl font-extrabold text-black tracking-wide transition-all duration-300 font-serif hover:text-[#14ff72cb]"
-              style={{
-                textDecoration: "none",
-                fontFamily: "'Playfair Display', serif",
-              }}
-            >
+            <Link to="/">
               <img
-                src={logo} // Path to your SVG file
+                src={logo}
                 alt="Bright Horizon Institute Logo"
-                className="h-14" // Set height of the logo as per your design
+                className="h-13"
               />
             </Link>
           </div>
 
-          {/* Search Bar - Hidden on Mobile */}
+          {/* Search Bar */}
           <div className="hidden lg:flex flex-grow justify-center">
             <div className="relative w-full max-w-md">
               <input
@@ -42,145 +37,156 @@ const Header = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full px-4 py-2 text-white border border-green-400 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-white" // Add your custom class here
+                className="w-full px-4 py-2 text-black border border-black rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-black"
               />
               <button className="absolute inset-y-0 right-3 flex items-center">
-                <FaSearch className="h-5 w-5 text-[#14ff72cb]" />
+                <FaSearch className="h-5 w-5 text-[#0F76A8]" />
               </button>
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Fixed on the Right Side */}
           <button
             type="button"
-            className="lg:hidden p-2 text-[#14ff72cb] rounded-md transition duration-200 focus:bg-black hover:bg-gray-100"
+            style={{
+              padding: "8px",
+              color: "#212121",
+              borderRadius: "5px",
+              transition: "all 0.2s ease-in-out",
+              backgroundColor: isMenuOpen ? "black" : "transparent",
+              position: "absolute", // Fix it to the right side
+              right: "16px", // Adjust this to set the right margin
+              top: "50%", // Center the button vertically
+              transform: "translateY(-50%)", // Adjust to truly center the button vertically
+            }}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden" // Hide on large screens and above
           >
             {isMenuOpen ? (
               <svg
-                className="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
                 fill="none"
+                stroke={isMenuOpen ? "#0F76A8" : "currentColor"}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
               <svg
-                className="w-6 h-6"
-                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
                 fill="none"
+                stroke={isMenuOpen ? "##0F76A8" : "currentColor"}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 8h16M4 16h16"
-                />
+                <path d="M4 8h16M4 16h16" />
               </svg>
             )}
           </button>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex lg:items-center lg:ml-auto lg:gap-x-12">
-            <Link
-              to="/"
-              className="text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-110 hover:underline no-underline flex items-center space-x-2"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <FaHome className="h-5 w-5 text-[#14ff72cb]" />
-              <span className="">Home</span>
-            </Link>
-            <Link
-              to="/about"
-              className="text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-110 hover:underline no-underline flex items-center space-x-2"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <MdVoiceChat className="h-5 w-5 text-[#14ff72cb]" />
-
-              <span className="">About</span>
-            </Link>
-            <Link
-              to="/courses"
-              className="text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-110 hover:underline no-underline flex items-center space-x-2"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <MdCastForEducation className="h-5 w-5 text-[#14ff72cb]" />
-              <span>Courses</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-110 hover:underline no-underline flex items-center space-x-2"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <FaPhoneVolume className="h-5 w-5 text-[#14ff72cb]" />
-
-              <span>Contact</span>
-            </Link>
+            {[
+              {
+                path: "/",
+                label: "Home",
+                icon: <FaHome className="h-5 w-5" />,
+              },
+              {
+                path: "/about",
+                label: "About",
+                icon: <MdVoiceChat className="h-5 w-5" />,
+              },
+              {
+                path: "/courses",
+                label: "Courses",
+                icon: <MdCastForEducation className="h-5 w-5" />,
+              },
+              {
+                path: "/contact",
+                label: "Contact",
+                icon: <FaPhoneVolume className="h-5 w-5" />,
+              },
+            ].map(({ path, label, icon }, index) => (
+              <Link
+                key={index}
+                to={path}
+                onClick={() => setIsMenuOpen(false)}
+                style={{
+                  color: location.pathname === path ? "#212121" : "#0F76A8",
+                  fontWeight: location.pathname === path ? "bold" : "bold",
+                  textDecoration:
+                    location.pathname === path ? "none" : "none",
+                  padding: "8px 0",
+                  fontSize: "1.125rem",
+                  fontFamily: "Nunito",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  transition: "all 0.3s ease-in-out",
+                }}
+              >
+                {icon}
+                <span>{label}</span>
+              </Link>
+            ))}
           </div>
         </nav>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <nav className="absolute top-full left-0 w-full bg-[#212121] rounded-md shadow-md lg:hidden">
+          <nav className="absolute top-full left-0 w-full bg-[#14ff72] rounded-md shadow-md lg:hidden">
             <div className="flex flex-col px-6 py-4 space-y-2">
-              <Link
-                to="/"
-                className="py-2 text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-105 hover:underline flex items-center space-x-2"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                <FaHome className="h-5 w-5 text-[#14ff72cb] mr-4" />
-                Home
-              </Link>
-              <Link
-                to="/about"
-                className="py-2 text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-105 hover:underline flex items-center space-x-2"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                <MdVoiceChat className="h-5 w-5 text-[#14ff72cb] mr-4" />
-                About
-              </Link>
-              <Link
-                to="/courses"
-                className="py-2 text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-105 hover:underline flex items-center space-x-2"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                <MdVoiceChat className="h-5 w-5 text-[#14ff72cb] mr-4" />
-                Courses
-              </Link>
-
-              <Link
-                to="/contact"
-                className="py-2 text-lg font-medium text-white transition-all duration-300 transform hover:text-[#14ff72cb] hover:scale-105 hover:underline flex items-center space-x-2"
-                style={{
-                  textDecoration: "none",
-                }}
-              >
-                <FaPhoneVolume className="h-5 w-5 text-[#14ff72cb] mr-4" />
-                Contact
-              </Link>
+              {[
+                {
+                  path: "/",
+                  label: "Home",
+                  icon: <FaHome className="h-5 w-5" />,
+                },
+                {
+                  path: "/about",
+                  label: "About",
+                  icon: <MdVoiceChat className="h-5 w-5" />,
+                },
+                {
+                  path: "/courses",
+                  label: "Courses",
+                  icon: <MdCastForEducation className="h-5 w-5" />,
+                },
+                {
+                  path: "/contact",
+                  label: "Contact",
+                  icon: <FaPhoneVolume className="h-5 w-5" />,
+                },
+              ].map(({ path, label, icon }, index) => (
+                <Link
+                  key={index}
+                  to={path}
+                  onClick={() => setIsMenuOpen(false)}
+                  style={{
+                    color: location.pathname === path ? "#212121" : "#0F76A8",
+                    fontWeight: location.pathname === path ? "bold" : "bold",
+                    textDecoration:
+                      location.pathname === path ? "none" : "none",
+                    padding: "8px 0",
+                    fontSize: "1.125rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    transition: "all 0.3s ease-in-out",
+                  }}
+                >
+                  {icon}
+                  <span>{label}</span>
+                </Link>
+              ))}
             </div>
           </nav>
         )}
