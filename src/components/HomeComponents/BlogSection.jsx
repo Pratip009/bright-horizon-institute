@@ -92,7 +92,7 @@ const BlogSection = () => {
             </h1>
           </div>
         </h1>
-
+       
         <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up">
           We understand that better learning can make a significant change to
           reach students from all over the world! Giving options to learn better

@@ -11,6 +11,9 @@ export default {
           500: "#8c4e22",
         },
       },
+      fontFamily: {
+        dmserif: ["DM Serif Text", "serif"],
+      },
     },
   },
   plugins: [],

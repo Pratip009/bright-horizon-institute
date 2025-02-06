@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Banner from "../../components/Banner";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS CSS
+import { useNavigate } from "react-router-dom";
 import {
   FaClock,
   FaCertificate,
@@ -10,9 +11,14 @@ import {
   FaListAlt,
 } from "react-icons/fa";
 const CourseDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
+
+  const handleEnroll = () => {
+    navigate(`/payment/${id}`, { state: { course } }); // Pass course data to payment page
+  };
 
   useEffect(() => {
     AOS.init(); // Initialize AOS for animations
@@ -204,6 +210,7 @@ const CourseDetail = () => {
           <button
             className="w-full py-3 px-4 bg-green-400 text-white text-2xl font-semibold rounded-lg hover:bg-green-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             data-aos="zoom-in"
+            onClick={handleEnroll}
           >
             Enroll Now
           </button>

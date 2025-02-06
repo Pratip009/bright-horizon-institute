@@ -32,30 +32,25 @@ export default function PopularCourses() {
 
   return (
     <section className="text-center py-16">
-      <span 
-        className="text-sm text-red-500 font-semibold"
-        data-aos="fade-up"
-      >
+      <span className="text-sm text-red-500 font-semibold" data-aos="fade-up">
         LEARN AT YOUR OWN PACE
       </span>
 
-      <h1 
-        className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
-        data-aos="fade-up" 
+      <h1
+        className="text-black font-bold text-4xl sm:text-6xl lg:text-7xl"
+        data-aos="fade-up"
         data-aos-delay="200"
       >
         Popular <span className="mr-2"></span>
         <div className="relative inline-flex">
-          <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-          <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-            Courses
-          </h1>
+          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80] "></span>
+          <span className="relative font-dmserif">Courses</span>
         </div>
       </h1>
-      
-      <p 
+
+      <p
         className="mt-8 text-base text-black sm:text-xl"
-        data-aos="fade-up" 
+        data-aos="fade-up"
         data-aos-delay="400"
       >
         Bright Horizon Institute offers students a high-quality training program

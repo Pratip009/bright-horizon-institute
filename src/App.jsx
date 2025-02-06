@@ -12,7 +12,7 @@ import Contact from "./Pages/Contact/Contact";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import AOS from "aos";
-
+import PaymentAccept from "./Pages/Payment/PaymentAccept";
 
 const App = () => {
   useEffect(() => {
@@ -34,6 +34,7 @@ const App = () => {
           <Route path="/courses/:id" element={<CourseDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/payment/:id" element={<PaymentAccept />} />
         </Routes>
       </div>
       <Footer />

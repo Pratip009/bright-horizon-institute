@@ -49,16 +49,15 @@ export default function FeaturesSection() {
         EDUCATION FOR EVERYONE
       </span>
 
-      <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
+      <h1
+        className="text-black font-bold text-4xl sm:text-6xl lg:text-7xl"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
         Affordable Online Courses and Learning <span className="mr-2"></span>
         <div className="relative inline-flex">
-          <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-          <h1
-            className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
-            data-aos="zoom-in"
-          >
-            Opportunities
-          </h1>
+          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80] "></span>
+          <span className="relative font-dmserif">Opportunities</span>
         </div>
       </h1>
 
