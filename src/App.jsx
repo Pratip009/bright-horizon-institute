@@ -2,7 +2,7 @@
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Headers/Header";
-
+import PaymentOptions from "./Pages/Payment/PaymentOption";
 import Footer from "./components/Footer/Footer";
 import Home from "./Pages/Home/Home";
 import Courses from "./Pages/Courses/Courses";
@@ -35,6 +35,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/payment/:id" element={<PaymentAccept />} />
+          <Route path="/payment-options" element={<PaymentOptions />} />
         </Routes>
       </div>
       <Footer />
