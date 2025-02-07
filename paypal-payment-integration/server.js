@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+require("dotenv").config();
 const express = require("express");
 const paypal = require("paypal-rest-sdk");
 const cors = require("cors");
@@ -10,8 +11,8 @@ app.use(express.json()); // Enable JSON parsing for POST requests
 // PayPal configuration
 paypal.configure({
   mode: "sandbox", // Change to 'live' for production
-  client_id: "AWZxXnaTRcQDTuP4EdH3ICEpXYpYuNzge0QClzRGGkfuFImQ4pVZH0fV9w4b4bZlUJIw-wEPUp_xpVpf",
-  client_secret: "EIL5LkOxVUZD8HJemKl59Vsm6ByLGTE9LENtMco5x2PXxSxCvr-ph61XoI4dtsdIEvUU6CweMYqbytU1",
+  client_id: process.env.PAYPAL_CLIENT_ID,
+  client_secret: process.env.PAYPAL_CLIENT_SECRET,
 });
 
 // Route to initiate PayPal payment
