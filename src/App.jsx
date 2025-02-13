@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import PaymentAccept from "./Pages/Payment/PaymentAccept";
 import PaymentSuccess from "./Pages/Payment/PaymentSuccess";
-import Blog from "./Pages/Blog/blog";
+import Blog from "./Pages/Blog/Blog"
 import BlogDetails from "./Pages/Blog/BlogDetails";
 import Gallery from "./Pages/Gallery/Gallery";
 const App = () => {
