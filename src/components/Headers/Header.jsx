@@ -1,3 +1,4 @@
+import { useUser, UserButton, SignInButton } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/slider/bhilogo.svg";
@@ -7,6 +8,7 @@ import { FaBlog } from "react-icons/fa";
 import { RiGalleryFill } from "react-icons/ri";
 
 const Header = () => {
+  const { isSignedIn } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [coursesData, setCoursesData] = useState([]);
@@ -68,7 +70,8 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-200">
-      <div className="px-6 mx-auto max-w-7xl sm:px-8 lg:px-1 flex items-center justify-between h-20">
+      <div className="px-6 mx-auto max-w-8xl sm:px-8 lg:px-12 flex items-center justify-between h-20">
+
         {/* Logo */}
         <Link to="/">
           <img
@@ -167,6 +170,19 @@ const Header = () => {
               </Link>
             );
           })}
+          <div className="ml-6 flex items-center justify-center">
+            {!isSignedIn ? (
+              <SignInButton mode="modal">
+                <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300">
+                  Get Started
+                </button>
+              </SignInButton>
+            ) : (
+              <div className="ml-4 flex items-center">
+                <UserButton />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -219,7 +235,7 @@ const Header = () => {
               { path: "/blog", label: "Blog", icon: <FaBlog /> },
               { path: "/gallery", label: "Gallery", icon: <RiGalleryFill /> },
               { path: "/contact", label: "Contact", icon: <FaPhoneVolume /> },
-            ].map(({ path, label,  }) => (
+            ].map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
@@ -232,6 +248,19 @@ const Header = () => {
                 {label}
               </Link>
             ))}
+            <div className="ml-6 flex items-center justify-center">
+              {!isSignedIn ? (
+                <SignInButton mode="modal">
+                  <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300">
+                    Get Started
+                  </button>
+                </SignInButton>
+              ) : (
+                <div className="ml-4 flex items-center">
+                  <UserButton />
+                </div>
+              )}
+            </div>
           </div>
         </nav>
       )}
