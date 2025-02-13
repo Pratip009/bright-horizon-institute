@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { useNavigate } from "react-router-dom";
 const ExpertSkills = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate("/courses");
+  };
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -61,6 +68,7 @@ const ExpertSkills = () => {
               </p>
 
               <button
+                onClick={handleClick}
                 type="button"
                 className="px-6 py-3 text-lg font-semibold text-white bg-[#F97316] rounded-lg shadow-md transition-all duration-300 hover:bg-[#DE6006FF] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 data-aos="zoom-in"

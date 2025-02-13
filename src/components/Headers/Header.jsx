@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/slider/bhilogo.svg";
 import { FaSearch, FaHome, FaPhoneVolume } from "react-icons/fa";
 import { MdVoiceChat, MdCastForEducation } from "react-icons/md";
+import { FaBlog } from "react-icons/fa";
+import { RiGalleryFill } from "react-icons/ri";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -63,7 +65,6 @@ const Header = () => {
     setFilteredCourses([]);
     navigate(`/courses/${courseId}`); // Navigating using course ID instead of slug
   };
-  
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-200">
@@ -146,8 +147,10 @@ const Header = () => {
               label: "Courses",
               icon: <MdCastForEducation />,
             },
+            { path: "/blog", label: "Blog", icon: <FaBlog /> },
+            { path: "/gallery", label: "Gallery", icon: <RiGalleryFill /> },
             { path: "/contact", label: "Contact", icon: <FaPhoneVolume /> },
-          ].map(({ path, label, icon }) => {
+          ].map(({ path, label }) => {
             const isActive = location.pathname === path;
             return (
               <Link
@@ -160,7 +163,7 @@ const Header = () => {
                   textDecoration: "none",
                 }}
               >
-                {icon} {label}
+                {label}
               </Link>
             );
           })}
@@ -213,8 +216,10 @@ const Header = () => {
                 label: "Courses",
                 icon: <MdCastForEducation />,
               },
+              { path: "/blog", label: "Blog", icon: <FaBlog /> },
+              { path: "/gallery", label: "Gallery", icon: <RiGalleryFill /> },
               { path: "/contact", label: "Contact", icon: <FaPhoneVolume /> },
-            ].map(({ path, label, icon }) => (
+            ].map(({ path, label,  }) => (
               <Link
                 key={path}
                 to={path}
@@ -224,7 +229,7 @@ const Header = () => {
                   textDecoration: "none",
                 }}
               >
-                {icon} {label}
+                {label}
               </Link>
             ))}
           </div>

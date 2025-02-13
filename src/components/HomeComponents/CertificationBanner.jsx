@@ -1,8 +1,16 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 const CertificationBanner = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate("/courses");
+  };
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -59,6 +67,7 @@ const CertificationBanner = () => {
       </p>
 
       <button
+        onClick={handleClick}
         className="mt-6 px-6 py-3 bg-red-500 text-white font-semibold rounded-md flex items-center gap-2 hover:bg-red-600 transition"
         data-aos="fade-up"
         data-aos-delay="600"

@@ -34,7 +34,10 @@ const PaymentOptions = () => {
     setLoading((prev) => ({ ...prev, [type]: true }));
 
     try {
-      const res = await axios.post("http://localhost:8000/payment", { amount });
+      const res = await axios.post("http://localhost:8000/payment", {
+        amount,
+        return_url: "http://localhost:3000/success",
+      });
 
       if (res.data.approval_url) {
         window.location.href = res.data.approval_url;

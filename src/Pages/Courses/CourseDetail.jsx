@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Banner from "../../components/Banner";
+
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS CSS
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,7 @@ import {
   FaGraduationCap,
   FaListAlt,
 } from "react-icons/fa";
+
 const CourseDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -226,6 +228,7 @@ const CourseDetail = () => {
           </div>
         </div>
       </div>
+      {/* <ContactForm/> */}
     </div>
   );
 };

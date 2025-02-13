@@ -106,7 +106,7 @@ export default function FeaturesSection() {
 
             {/* Button */}
             <a
-              href="#"
+              href="/courses"
               className="text-white font-medium mt-6 bg-[#4ADE80] px-6 py-3 rounded-full transition-all duration-300 hover:bg-[#57ad58] hover:scale-105 shadow-md inline-block"
               style={{ textDecoration: "None" }}
               data-aos="fade-up"

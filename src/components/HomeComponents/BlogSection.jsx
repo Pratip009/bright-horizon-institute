@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   { icon: "🎓", text: "Expert Trainers" },
@@ -10,10 +11,17 @@ const features = [
 ];
 
 const BlogSection = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    navigate("/courses");
+  };
+
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Animation duration
-      once: true, // Runs only once when scrolling down
+      duration: 1000,
+      once: true,
       easing: "ease-in-out",
     });
   }, []);
@@ -34,26 +42,23 @@ const BlogSection = () => {
       ></div>
 
       {/* Images Section */}
-      <div
-        className="flex-1 grid grid-cols-2 gap-6 relative"
-        data-aos="zoom-in"
-      >
+      <div className="flex-1 grid grid-cols-2 gap-6 relative" data-aos="zoom-in">
         {/* First Image */}
-        <div className="relative bg-white p-3 rounded-xl shadow-lg border-3 border-red-400 border-dashed transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+        <div className="relative bg-white p-3 rounded-xl shadow-[10px_10px_30px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105">
           <img
             src="https://img.freepik.com/free-photo/education-elementary-school-learning-people-concept-group-school-kids-with-teacher-sitting-classroom-vintage-effect-style-pictures_1253-1372.jpg"
             alt="Team Collaboration"
-            className="rounded-xl"
+            className="rounded-xl shadow-md"
             data-aos="fade-up"
           />
         </div>
 
         {/* Second Image */}
-        <div className="relative bg-white p-3 rounded-xl shadow-lg border-3 border-green-400 border-dashed transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
+        <div className="relative bg-white p-3 rounded-xl shadow-[10px_10px_30px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105">
           <img
             src="https://img.freepik.com/free-photo/close-up-young-business-person-doing-internship_23-2149305380.jpg"
             alt="Casual Discussion"
-            className="rounded-xl"
+            className="rounded-xl shadow-md"
             data-aos="fade-up"
             data-aos-delay="200"
           />
@@ -61,14 +66,14 @@ const BlogSection = () => {
 
         {/* Third Image - Larger */}
         <div
-          className="relative bg-white p-3 rounded-xl shadow-lg border-3 border-blue-400 border-dashed col-span-2 transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+          className="relative bg-white p-3 rounded-xl shadow-[10px_10px_30px_rgba(0,0,0,0.2)] col-span-2 transition-transform duration-300 hover:scale-105"
           data-aos="fade-up"
           data-aos-delay="400"
         >
           <img
             src="https://img.freepik.com/free-photo/young-students-classroom_329181-13015.jpg"
             alt="Team Working Together"
-            className="rounded-xl"
+            className="rounded-xl shadow-md"
           />
         </div>
       </div>
@@ -92,7 +97,7 @@ const BlogSection = () => {
             </h1>
           </div>
         </h1>
-       
+
         <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up">
           We understand that better learning can make a significant change to
           reach students from all over the world! Giving options to learn better
@@ -120,6 +125,7 @@ const BlogSection = () => {
 
         {/* Button */}
         <button
+          onClick={handleClick}
           className="mt-12 bg-[#4ADE80] text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 transition-transform duration-300 flex items-center gap-2"
           style={{ marginTop: "20px", borderRadius: "20px" }}
           data-aos="fade-up"
