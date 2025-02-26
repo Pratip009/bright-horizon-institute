@@ -71,7 +71,6 @@ const Header = () => {
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-200">
       <div className="px-6 mx-auto max-w-8xl sm:px-8 lg:px-12 flex items-center justify-between h-20">
-
         {/* Logo */}
         <Link to="/">
           <img
@@ -105,7 +104,7 @@ const Header = () => {
 
           {/* Search Results Dropdown */}
           {filteredCourses.length > 0 && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-md mt-2 z-50 max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-md mt-2 z-[999] max-h-60 overflow-y-auto">
               {filteredCourses.map((course) => (
                 <div
                   key={course.id}

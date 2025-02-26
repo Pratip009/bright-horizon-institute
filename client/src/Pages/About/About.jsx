@@ -3,6 +3,7 @@ import ExpertSkills from "../../components/about/ExpertSkills";
 import StatsSection from "../../components/about/StatsSection";
 import Testimonials from "../../components/about/Testimonials";
 import Banner from "../../components/Banner";
+import FAQ from "../../components/about/Faq";
 
 const About = () => {
   useEffect(() => {
@@ -84,6 +85,7 @@ const About = () => {
         <ExpertSkills />
         <StatsSection />
         <Testimonials />
+        <FAQ/>
       </div>
     </div>
   );

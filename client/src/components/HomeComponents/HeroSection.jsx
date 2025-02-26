@@ -9,7 +9,7 @@ const videos = [
     description: "Empowering students with top-tier healthcare education.",
   },
   {
-    src: "https://videos.pexels.com/video-files/1580507/1580507-hd_1920_1080_30fps.mp4",
+    src: "https://videos.pexels.com/video-files/5536733/5536733-uhd_2560_1440_25fps.mp4",
     title: "Advanced Medical Training",
     description: "Gain hands-on experience with industry-leading instructors.",
   },
@@ -19,7 +19,7 @@ const videos = [
     description: "Get certified and secure job placement assistance.",
   },
   {
-    src: "https://videos.pexels.com/video-files/5198159/5198159-uhd_2560_1440_25fps.mp4",
+    src: "https://videos.pexels.com/video-files/7945680/7945680-hd_1920_1080_25fps.mp4",
     title: "Join the Bright Horizon",
     description: "Start your journey toward a successful medical career today!",
   },
@@ -46,7 +46,8 @@ const HeroSection = () => {
     if (runningTimeRef.current) {
       runningTimeRef.current.style.animation = "none";
       void runningTimeRef.current.offsetHeight; // Trigger reflow
-      runningTimeRef.current.style.animation = "runningTime 7s linear 1 forwards";
+      runningTimeRef.current.style.animation =
+        "runningTime 7s linear 1 forwards";
     }
   };
 
@@ -69,11 +70,17 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="carousel" ref={carouselRef}>
+    <div className="carousel relative z-[1]" ref={carouselRef}>
       <div className="list" ref={listRef}>
         {videos.map((video, index) => (
           <div key={index} className="item">
-            <video className="video" src={video.src} autoPlay loop muted></video>
+            <video
+              className="video"
+              src={video.src}
+              autoPlay
+              loop
+              muted
+            ></video>
             <div className="content">
               <div className="title">{video.title}</div>
               <div className="des">{video.description}</div>
@@ -86,8 +93,12 @@ const HeroSection = () => {
         ))}
       </div>
       <div className="arrows">
-        <button className="prev" onClick={() => showSlider("prev")}>&lt;</button>
-        <button className="next" onClick={() => showSlider("next")}>&gt;</button>
+        <button className="prev" onClick={() => showSlider("prev")}>
+          &lt;
+        </button>
+        <button className="next" onClick={() => showSlider("next")}>
+          &gt;
+        </button>
       </div>
       <div className="timeRunning" ref={runningTimeRef}></div>
     </div>
