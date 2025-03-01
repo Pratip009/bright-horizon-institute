@@ -1,4 +1,3 @@
-import { useUser, UserButton, SignInButton } from "@clerk/clerk-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/slider/bhilogo.svg";
@@ -6,9 +5,10 @@ import { FaSearch, FaHome, FaPhoneVolume } from "react-icons/fa";
 import { MdVoiceChat, MdCastForEducation } from "react-icons/md";
 import { FaBlog } from "react-icons/fa";
 import { RiGalleryFill } from "react-icons/ri";
+import { useContext } from "react";
 
+import AuthContext from "../../context/AuthContext";
 const Header = () => {
-  const { isSignedIn } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [coursesData, setCoursesData] = useState([]);
@@ -16,7 +16,28 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const searchRef = useRef(null);
+  const { user, logout } = useContext(AuthContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const handleClickOutside = (e) => {
+    if (!e.target.closest(".user-menu")) {
+      setDropdownOpen(false);
+    }
+  };
+
+  // Attach event listener when dropdown is open
+  useState(() => {
+    if (dropdownOpen) {
+      document.addEventListener("click", handleClickOutside);
+    } else {
+      document.removeEventListener("click", handleClickOutside);
+    }
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    console.log("User data from context:", user);
+  }, [user]);
   // Close menu when navigating
   useEffect(() => {
     setIsMenuOpen(false);
@@ -170,15 +191,56 @@ const Header = () => {
             );
           })}
           <div className="ml-6 flex items-center justify-center">
-            {!isSignedIn ? (
-              <SignInButton mode="modal">
-                <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300">
-                  Get Started
-                </button>
-              </SignInButton>
+            {user ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent immediate closing
+                  setDropdownOpen(!dropdownOpen);
+                }}
+                className="text-gray-700 font-semibold px-4 py-2 rounded-md bg-gray-100 shadow-md cursor-pointer"
+              >
+                {user.username}
+              </button>
             ) : (
-              <div className="ml-4 flex items-center">
-                <UserButton />
+              <Link
+              to="/login"
+              className="px-4 py-2 rounded-md bg-[#fb2c36] text-white font-semibold shadow-md cursor-pointer text-center inline-block no-underline"
+              style={{textDecoration:"none"}}
+            >
+              Sign In
+            </Link>
+            
+            )}
+
+            {user && dropdownOpen && (
+              <div className="absolute top-full mt-1 right-0 w-48 bg-white shadow-lg border rounded-lg z-50">
+                <ul className="p-0 text-gray-700 text-sm">
+                  {/* Admin Dashboard (Only for Admins) */}
+                  {user?.role === "admin" && ( // ✅ Safe check
+                    <li>
+                      <Link
+                        to="/admin"
+                        className="block px-4 py-2 hover:bg-gray-100 transition rounded-md text-gray-700 no-underline"
+                        style={{
+                          textDecoration: "none",
+                          color:'green',
+                          fontWeight:'bold'
+                        }}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    </li>
+                  )}
+                  {/* Logout Option */}
+                  <li>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-2 text-red-500 font-medium rounded-md"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
               </div>
             )}
           </div>
@@ -247,19 +309,7 @@ const Header = () => {
                 {label}
               </Link>
             ))}
-            <div className="ml-6 flex items-center justify-center">
-              {!isSignedIn ? (
-                <SignInButton mode="modal">
-                  <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300">
-                    Get Started
-                  </button>
-                </SignInButton>
-              ) : (
-                <div className="ml-4 flex items-center">
-                  <UserButton />
-                </div>
-              )}
-            </div>
+            <div className="ml-6 flex items-center justify-center"></div>
           </div>
         </nav>
       )}
