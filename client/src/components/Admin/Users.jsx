@@ -10,8 +10,14 @@ const Users = () => {
   }, []);
 
   const loadUsers = async () => {
-    const data = await fetchUsers();
-    setUsers(data);
+    console.log("Calling fetchUsers..."); // Debugging log
+    try {
+      const data = await fetchUsers();
+      console.log("Fetched users:", data); // Check API response
+      setUsers(data);
+    } catch (error) {
+      console.error("Error loading users:", error);
+    }
   };
 
   const handleDelete = async (id) => {
