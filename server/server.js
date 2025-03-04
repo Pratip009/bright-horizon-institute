@@ -8,7 +8,6 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes'); 
 const { auth } = require("./middleware/authMiddleware"); 
 
-
 const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
@@ -26,7 +25,6 @@ mongoose.connection.on('error', (err) => {
 // Use routes
 app.use('/auth', authRoutes);
 app.use('/users', auth(["admin"]), userRoutes);
-
 
 // PayPal configuration
 paypal.configure({
