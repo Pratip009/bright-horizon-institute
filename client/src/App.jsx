@@ -21,6 +21,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import AddCourse from "./components/Admin/AddCourse"; // Import AddCourse component
+import AddBlog from "./components/Admin/AddBlog";
 
 const App = () => {
   useEffect(() => {
@@ -63,6 +64,14 @@ const App = () => {
               element={
                 <ProtectedRoute roles={["admin"]}>
                   <AddCourse />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-blog"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddBlog />
                 </ProtectedRoute>
               }
             />

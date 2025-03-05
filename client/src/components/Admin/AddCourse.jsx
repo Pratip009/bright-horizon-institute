@@ -1,24 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const AddCourse = ({ onSubmit }) => {
+const AddCourse = () => {
   const [course, setCourse] = useState({
     title: "",
-    image: "",
-    time: "",
-    programTime: "",
-    certification: "",
-    credential: "",
-    job: "",
+    imgUrl: "",
     price: "",
+    duration: "",
+    totalHours: "",
+    credential: "",
+    preRequisite: "",
     description: "",
-    category: "",
-    courseContents: "",
-    preRequisites: "",
-    totalClockHours: "",
-    calendarLength: "",
+    content: "",
+    certification: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:8000/courses");
+      setCourses(data);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
 
   const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
@@ -26,84 +36,75 @@ const AddCourse = ({ onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Unauthorized: Please login first.");
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch("http://localhost:5000/api/courses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...course,
-          courseContents: course.courseContents.split(",").map(item => item.trim()),
-        }),
+      await axios.post("http://localhost:8000/courses", course, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Course added successfully!");
-        setCourse({
-          title: "",
-          image: "",
-          time: "",
-          programTime: "",
-          certification: "",
-          credential: "",
-          job: "",
-          price: "",
-          description: "",
-          category: "",
-          courseContents: "",
-          preRequisites: "",
-          totalClockHours: "",
-          calendarLength: "",
-        });
-      } else {
-        alert(result.message || "Failed to add course");
-      }
+      alert("Course added successfully");
+      fetchCourses();
+      setCourse({
+        title: "",
+        imgUrl: "",
+        price: "",
+        duration: "",
+        totalHours: "",
+        credential: "",
+        preRequisite: "",
+        description: "",
+        content: "",
+        certification: "",
+      });
     } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while adding the course.");
+      alert(error.response?.data?.message || "Failed to add course");
     }
-
-    setLoading(false);
   };
 
   return (
-    <div className="p-6 bg-white rounded shadow-md">
-      <h2 className="text-lg font-bold mb-4">Add Course</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {Object.keys(course).map((key) => (
-          <input
-            key={key}
-            type={key === "totalClockHours" ? "number" : "text"}
-            name={key}
-            placeholder={key.replace(/([A-Z])/g, " $1").trim()}
-            value={course[key]}
-            onChange={handleChange}
-            className="w-full p-2 border"
-            required={["title", "description", "category", "courseContents"].includes(key)}
-          />
-        ))}
+    <div className="min-h-screen bg-gray-100 pb-20">
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Add Course</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          <input className="border p-2 rounded-md" type="text" name="title" placeholder="Title" value={course.title} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="imgUrl" placeholder="Image URL" value={course.imgUrl} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="number" name="price" placeholder="Price" value={course.price} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="duration" placeholder="Duration" value={course.duration} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="totalHours" placeholder="Total Hours" value={course.totalHours} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="credential" placeholder="Credential" value={course.credential} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="preRequisite" placeholder="Pre-Requisite" value={course.preRequisite} onChange={handleChange} required />
+          <textarea className="border p-2 rounded-md col-span-2" name="description" placeholder="Description" value={course.description} onChange={handleChange} required />
+          <textarea className="border p-2 rounded-md col-span-2" name="content" placeholder="Course Content (comma separated)" value={course.content} onChange={handleChange} required />
+          <input className="border p-2 rounded-md col-span-2" type="text" name="certification" placeholder="Certification" value={course.certification} onChange={handleChange} required />
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md col-span-2 hover:bg-blue-600">Add Course</button>
+        </form>
+      </div>
 
-        <button
-          type="submit"
-          className={`px-4 py-2 text-white rounded ${loading ? "bg-gray-400" : "bg-blue-600"}`}
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Submit"}
-        </button>
-      </form>
+      {/* Display Course List */}
+      <div className="max-w-4xl mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Courses List</h2>
+        <div className="overflow-auto max-h-96">
+          <table className="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border p-2">Title</th>
+                <th className="border p-2">Price</th>
+                <th className="border p-2">Duration</th>
+                <th className="border p-2">Credential</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((c) => (
+                <tr key={c._id} className="hover:bg-gray-100">
+                  <td className="border p-2">{c.title}</td>
+                  <td className="border p-2">${c.price}</td>
+                  <td className="border p-2">{c.duration}</td>
+                  <td className="border p-2">{c.credential}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
