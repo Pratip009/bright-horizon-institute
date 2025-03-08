@@ -9,7 +9,7 @@ const AddGalleryImage = () => {
   const [loading, setLoading] = useState(false);
   const [galleryImages, setGalleryImages] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
-const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   // Handle image selection
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -40,16 +40,12 @@ const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
       // Get the authentication token (from localStorage or another storage)
       const token = localStorage.getItem("token"); // Or wherever you're storing the token
 
-      const response = await axios.post(
-        `${API_URL}/gallery`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the headers
-            "Content-Type": "multipart/form-data", // Ensures that the request is processed as form data
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/gallery`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add the token to the headers
+          "Content-Type": "multipart/form-data", // Ensures that the request is processed as form data
+        },
+      });
 
       alert("Image uploaded successfully!");
       setTitle("");
@@ -80,14 +76,11 @@ const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
   const handleDeleteImage = async (imageId) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.delete(
-        `${API_URL}/gallery/${imageId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_URL}/gallery/${imageId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       alert("Image deleted successfully!");
       fetchGalleryImages(); // Refresh the gallery images after deletion

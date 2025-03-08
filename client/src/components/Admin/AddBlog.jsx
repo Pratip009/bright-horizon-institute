@@ -19,7 +19,7 @@ const AddBlog = () => {
   useEffect(() => {
     fetchBlogs();
   }, []);
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const fetchBlogs = async () => {
     try {
       const { data } = await axios.get(`${API_URL}/blogs`);
@@ -136,13 +136,62 @@ const AddBlog = () => {
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Add Blog</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          <input className="border p-2 rounded-md" type="text" name="title" placeholder="Title" value={blog.title} onChange={handleChange} required />
-          <input className="border p-2 rounded-md" type="text" name="author" placeholder="Author" value={blog.author} onChange={handleChange} required />
-          <input className="border p-2 rounded-md" type="text" name="category" placeholder="Category" value={blog.category} onChange={handleChange} required />
-          <textarea className="border p-2 rounded-md col-span-2" name="content" placeholder="Content" value={blog.content} onChange={handleChange} required></textarea>
-          <input className="border p-2 rounded-md col-span-2" type="file" accept="image/*" onChange={handleImageChange} required />
-          {imagePreview && <img src={imagePreview} alt="Preview" className="w-40 h-40 object-cover mt-2 mx-auto rounded-md border" />}
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md col-span-2 hover:bg-blue-600" disabled={uploading}>{uploading ? "Uploading..." : "Add Blog"}</button>
+          <input
+            className="border p-2 rounded-md"
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={blog.title}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="border p-2 rounded-md"
+            type="text"
+            name="author"
+            placeholder="Author"
+            value={blog.author}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="border p-2 rounded-md"
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={blog.category}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            className="border p-2 rounded-md col-span-2"
+            name="content"
+            placeholder="Content"
+            value={blog.content}
+            onChange={handleChange}
+            required
+          ></textarea>
+          <input
+            className="border p-2 rounded-md col-span-2"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            required
+          />
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-40 h-40 object-cover mt-2 mx-auto rounded-md border"
+            />
+          )}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded-md col-span-2 hover:bg-blue-600"
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Add Blog"}
+          </button>
         </form>
       </div>
       <div className="max-w-4xl mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
@@ -161,10 +210,27 @@ const AddBlog = () => {
             {blogs.map((c) => (
               <tr key={c._id} className="hover:bg-gray-100">
                 <td className="border p-2">{c.title}</td>
-                <td className="border p-2">{c.imgUrl ? <img src={c.imgUrl} alt={c.title} className="h-16 w-16 object-cover rounded-md" /> : "No Image"}</td>
+                <td className="border p-2">
+                  {c.imgUrl ? (
+                    <img
+                      src={c.imgUrl}
+                      alt={c.title}
+                      className="h-16 w-16 object-cover rounded-md"
+                    />
+                  ) : (
+                    "No Image"
+                  )}
+                </td>
                 <td className="border p-2">{c.author}</td>
                 <td className="border p-2">{c.category}</td>
-                <td className="border p-2"><button className="bg-red-500 text-white px-3 py-1 rounded-md" onClick={() => handleDelete(c._id)}>Delete</button></td>
+                <td className="border p-2">
+                  <button
+                    className="bg-red-500 text-white px-3 py-1 rounded-md"
+                    onClick={() => handleDelete(c._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

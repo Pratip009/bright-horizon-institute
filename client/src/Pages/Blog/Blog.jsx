@@ -14,7 +14,7 @@ const Blog = () => {
     AOS.init({ duration: 1000 });
     fetchBlogs();
   }, []);
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const fetchBlogs = async () => {
     try {
       const response = await fetch(`${API_URL}/blogs`);

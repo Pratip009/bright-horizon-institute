@@ -3,7 +3,7 @@ import Banner from "../../components/Banner";
 
 const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([]);
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   // Function to fetch gallery items
   const fetchGallery = async () => {
     try {
@@ -24,8 +24,8 @@ const Gallery = () => {
 
   return (
     <div className="container mx-auto px-4 mt-10">
-      <Banner 
-        text="Our Gallery" 
+      <Banner
+        text="Our Gallery"
         imageUrl="https://img.freepik.com/free-photo/portrait-group-happy-students-casual-outfit-with-books-while-standing_8353-6397.jpg"
       />
 
@@ -33,7 +33,10 @@ const Gallery = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
         {galleryItems.length > 0 ? (
           galleryItems.map((item, index) => (
-            <div key={index} className="flex flex-col items-center rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
+            <div
+              key={index}
+              className="flex flex-col items-center rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105"
+            >
               {/* Image */}
               <img
                 className="w-full h-64 object-cover rounded-xl"
@@ -42,11 +45,12 @@ const Gallery = () => {
               />
 
               {/* Title Below Image */}
-             
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 col-span-full">Loading gallery...</p>
+          <p className="text-center text-gray-500 col-span-full">
+            Loading gallery...
+          </p>
         )}
       </div>
     </div>

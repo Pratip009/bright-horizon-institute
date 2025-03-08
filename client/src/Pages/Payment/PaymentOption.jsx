@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 const PaymentOptions = () => {
   const location = useLocation();
   const [loading, setLoading] = useState({ full: false, partial: false });
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   useEffect(() => {
     window.scrollTo(0, 0);
     AOS.init({ duration: 1000 });

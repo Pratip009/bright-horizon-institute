@@ -7,7 +7,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

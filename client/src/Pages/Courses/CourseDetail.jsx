@@ -18,7 +18,7 @@ const CourseDetail = () => {
   const { isSignedIn } = useUser();
   const [course, setCourse] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   useEffect(() => {
     AOS.init(); // Initialize AOS for animations
 
@@ -105,9 +105,7 @@ const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
           {/* Tab Content */}
           <div>
             {activeTab === "description" && (
-              <p className="text-base text-black sm:text-xl">
-                {description}
-              </p>
+              <p className="text-base text-black sm:text-xl">{description}</p>
             )}
             {activeTab === "contents" && (
               <ul className="list-disc pl-6 space-y-2 text-base text-black sm:text-xl">
@@ -154,9 +152,7 @@ const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
             {title}
           </h2>
           <p className="text-2xl text-gray-700 mb-4">
-            <span className="text-green-400 text-3xl font-bold">
-              ${price}
-            </span>
+            <span className="text-green-400 text-3xl font-bold">${price}</span>
           </p>
           <div className="text-md text-gray-700 mb-6">
             <p className="flex items-center">
