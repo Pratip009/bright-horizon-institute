@@ -4,7 +4,7 @@ import { FaClock, FaRegArrowAltCircleRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import "./CourseCard.css";
 
-// eslint-disable-next-line react/prop-types
+
 const CourseCard = ({ courses }) => {
   return (
     <div className="courses-container">

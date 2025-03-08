@@ -49,7 +49,7 @@ const Blog = () => {
   const navigate = useNavigate();
 
   const handleReadMore = (blog) => {
-    navigate(`/blog/${blog.id}`, { state: blog });
+    navigate(`/blog/${blog._id}`); // ✅ Correct path
   };
 
   if (loading) return <p className="text-center mt-5">Loading blogs...</p>;
