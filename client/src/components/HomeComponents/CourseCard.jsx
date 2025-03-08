@@ -1,10 +1,7 @@
-
-
-// export default CourseCard;
+/* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
-import { FaClock } from "react-icons/fa";
+import { FaClock, FaRegArrowAltCircleRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
-import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import "./CourseCard.css";
 
 // eslint-disable-next-line react/prop-types
@@ -15,49 +12,44 @@ const CourseCard = ({ courses }) => {
         <div key={course.id} className="card">
           {/* Image section */}
           <div className="img">
-            <img src={course.image} alt={course.title} />
+            <img src={course.imgUrl} alt={course.title} />
           </div>
 
           {/* Course title */}
-          <span>{course.title}</span>
+          <span className="course-title">{course.title}</span>
 
           {/* Course details */}
-          <div className="times">
-            <p
-              className="info"
-              style={{ display: "flex", alignItems: "center" }}
-            >
+          <div className="course-details">
+            <p className="info">
               <FaClock className="mr-1 text-red-500" />
-              {course.time}
+              {course.totalHours}
             </p>
-            <p
-              className="info"
-              style={{ display: "flex", alignItems: "center" }}
-            >
+            <p className="info">
               <SlCalender className="mr-1 text-red-500" />
-              {course.programTime}
+              {course.duration}
             </p>
           </div>
 
-          <p className="info">
-            <b>Certification:</b> {course.certification}
-          </p>
-          <p className="info">
-            <b>Credential:</b> {course.credential}
-          </p>
-          <p className="info">
-            <b>Job:</b> {course.job}
-          </p>
+          {/* Additional course info */}
+          <div className="additional-info">
+            <p className="info">
+              <b>Certification:</b> {course.certification}
+            </p>
+            <p className="info">
+              <b>Credential:</b> {course.credential}
+            </p>
+            <p className="info">
+              <b>Job:</b> {course.certification}
+            </p>
+          </div>
 
           {/* Button */}
-          <Link to={`/courses/${course.id}`}>
-            <button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <Link to={`/courses/${course._id}`} className="view-button">
+            <button style={{
+              display:'flex',
+              alignItems:'center',
+              justifyContent:'center',
+            }}>
               View Programs <FaRegArrowAltCircleRight className="ml-3" />
             </button>
           </Link>

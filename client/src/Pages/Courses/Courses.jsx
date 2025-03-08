@@ -4,18 +4,36 @@ import Banner from "../../components/Banner";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
+  // Fetch courses from backend API on component mount
   useEffect(() => {
-    // Example of fetching the courses from a JSON file or an API
-    fetch("/courses.json")
-      .then((response) => response.json())
-      .then((data) => setCourses(data))
-      .catch((error) => console.error("Error fetching courses:", error));
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/courses"); // Replace with actual backend URL
+        if (!response.ok) {
+          throw new Error("Failed to fetch courses.");
+        }
+        const data = await response.json();
+        setCourses(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
   }, []);
+
+  // Display loading or error state
+  if (loading) return <div className="text-center py-8">Loading...</div>;
+  if (error) return <div className="text-center py-8">Error: {error}</div>;
 
   return (
     <div className="relative container-fluid mt-5 overflow-hidden">
-      {/* Abstract SVG Background */}
+      {/* SVG Background Elements */}
       <div className="absolute inset-0 -z-10">
         {/* Top Left Circle */}
         <svg
@@ -77,16 +95,21 @@ const Courses = () => {
         </svg>
       </div>
 
-      {/* Content */}
+      {/* Main Content */}
       <div className="container">
         <div style={{ marginTop: "3rem" }}>
           <Banner
             text="Courses"
-            imageUrl="https://www.commonsense.org/sites/default/files/png/2020-12/teachers-essential-guide-to-coding-in-the-classroom-article.png"
+            gradient="linear-gradient(to right, #A8EDC1FF, #fed6e3)"
           />
         </div>
         <section className="pt-12 pb-12 sm:pb-16 lg:pt-8">
-          <CourseCard courses={courses} />
+          {/* Displaying courses */}
+          {courses.length > 0 ? (
+            <CourseCard courses={courses} />
+          ) : (
+            <div className="text-center">No courses available.</div>
+          )}
         </section>
       </div>
     </div>

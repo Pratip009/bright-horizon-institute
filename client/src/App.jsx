@@ -20,8 +20,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
-import AddCourse from "./components/Admin/AddCourse"; // Import AddCourse component
+import AddCourse from "./components/Admin/AddCourse";
 import AddBlog from "./components/Admin/AddBlog";
+import AddGalleryImage from "./components/Admin/AddGalleryImage";
+import Profile from "./Pages/Profile/Profile";
 
 const App = () => {
   useEffect(() => {
@@ -52,6 +54,14 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route
+              path="/profile"
+              element={
+                <ProtectedRoute roles={["user", "admin"]}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin"
               element={
                 <ProtectedRoute roles={["admin"]}>
@@ -64,6 +74,14 @@ const App = () => {
               element={
                 <ProtectedRoute roles={["admin"]}>
                   <AddCourse />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-images"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddGalleryImage />
                 </ProtectedRoute>
               }
             />

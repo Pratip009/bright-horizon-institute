@@ -79,7 +79,7 @@ const About = () => {
         <div style={{ marginTop: "2rem" }}>
           <Banner
             text="About Us"
-            imageUrl="https://www.shutterstock.com/image-photo/elementary-school-science-class-over-600nw-1795173874.jpg"
+            gradient="linear-gradient(to right, #7EEDF7FF, #fed6e3)"
           />
         </div>
         <ExpertSkills />

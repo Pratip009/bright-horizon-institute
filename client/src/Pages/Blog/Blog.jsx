@@ -4,7 +4,6 @@ import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaClock, FaBookOpen } from "react-icons/fa";
 import Banner from "../../components/Banner";
-import GlobalApi from "../../services/GlobalApi";
 
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,43 +17,33 @@ const Blog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await GlobalApi.getBlog();
-      console.log("API Response:", res); // Debugging API response
-
-      // Ensure res.data.data exists and is an array
-      if (!res.data || !Array.isArray(res.data.data)) {
-        throw new Error("Invalid API response structure");
+      const response = await fetch("http://localhost:8000/blogs");
+      if (!response.ok) {
+        throw new Error("Failed to fetch blogs");
       }
-
-      // Extracting blog data safely
-      const fetchedBlogs = res.data.data.map((blog) => ({
-        id: blog.id,
-        title: blog.attributes?.title || "Untitled",
-        author: blog.attributes?.author || "Unknown",
-        date: blog.attributes?.date
-          ? new Date(blog.attributes.date).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })
-          : "Unknown Date",
-        readingTime: blog.attributes?.readingTime || "N/A",
-        category: blog.attributes?.category?.split(",")[0] || "Uncategorized",
-        description: blog.attributes?.description || "No description available.",
-        image:
-          blog.attributes?.image?.data?.attributes?.formats?.medium?.url ||
-          blog.attributes?.image?.data?.attributes?.url ||
-          "https://via.placeholder.com/750", // Fallback image
-        content: blog.attributes?.content || "",
-      }));
-
-      setBlogs(fetchedBlogs);
-    } catch (err) {
-      console.error("Error fetching blogs:", err);
-      setError("Failed to load blogs. Please try again.");
-    } finally {
+      const data = await response.json();
+      setBlogs(data);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
       setLoading(false);
     }
+  };
+
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(" ");
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "...";
+    }
+    return text;
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   };
 
   const navigate = useNavigate();
@@ -67,22 +56,22 @@ const Blog = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="container mx-auto px-4 mt-10">
       <Banner
         text="Blogs"
-        imageUrl="https://img.freepik.com/free-photo/college-girl-working-with-laptop-after-lessons_496169-88.jpg?ga=GA1.1.1581216429.1736934459&semt=ais_hybrid"
+        gradient="linear-gradient(to right, #A8A8EDFF, #fed6e3)"
       />
 
       <div className="grid md:grid-cols-3 gap-8 mt-6">
         {blogs.map((blog) => (
           <div
-            key={blog.id}
+            key={blog._id}
             className="bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all transform flex flex-col"
             data-aos="fade-up"
           >
             {/* Blog Image */}
             <img
-              src={blog.image}
+              src={blog.imgUrl}
               alt={blog.title}
               className="w-full h-48 object-cover"
             />
@@ -96,7 +85,9 @@ const Blog = () => {
                 </span>
                 <div className="flex items-center gap-1">
                   <FaClock className="text-red-500" />
-                  <span className="text-gray-400">{blog.date}</span>
+                  <span className="text-gray-400">
+                    {formatDate(blog.createdAt)}
+                  </span>
                 </div>
               </div>
 
@@ -112,7 +103,9 @@ const Blog = () => {
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 mb-4 flex-grow">{blog.description}</p>
+              <p className="text-gray-600 mb-4 flex-grow">
+                {truncateText(blog.content, 20)}
+              </p>
 
               {/* Read More Button */}
               <button

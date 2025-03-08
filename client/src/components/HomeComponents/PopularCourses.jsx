@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 import CourseCard from "./CourseCard";
 
 export default function PopularCourses() {
-  const [courses, setCourses] = useState([]); // Store all courses
+  const [courses, setCourses] = useState([]); // Store only 4 courses
 
   useEffect(() => {
     // Initialize AOS
@@ -16,12 +16,12 @@ export default function PopularCourses() {
 
     const fetchCourses = async () => {
       try {
-        const response = await fetch("/data.json");
+        const response = await fetch("http://localhost:8000/courses");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        setCourses(data); // Set courses data
+        setCourses(data.slice(0, 4)); // Get only the first 4 courses
       } catch (error) {
         console.error("Error fetching course data:", error);
       }
@@ -43,7 +43,7 @@ export default function PopularCourses() {
       >
         Popular <span className="mr-2"></span>
         <div className="relative inline-flex">
-          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80] "></span>
+          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80]"></span>
           <span className="relative font-dmserif">Courses</span>
         </div>
       </h1>

@@ -1,87 +1,175 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const AddBlog = () => {
-  const [blogData, setBlogData] = useState({
+  const [blog, setBlog] = useState({
     title: "",
-    subTitle: "",
-    image: "",
-    description: "",
+    imgUrl: "",
     content: "",
     author: "",
+    category: "",
   });
 
-  const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [blogs, setBlogs] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:8000/blogs");
+      setBlogs(data);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
+  };
 
   const handleChange = (e) => {
-    setBlogData({ ...blogData, [e.target.name]: e.target.value });
+    setBlog({ ...blog, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const uploadImageToCloudinary = async () => {
+    if (!imageFile) {
+      alert("No image selected");
+      return "";
+    }
+
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("upload_preset", "blog_images_upload");
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dqzl0pxhr/image/upload",
+        { method: "POST", body: formData }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        return data.secure_url;
+      } else {
+        throw new Error(data.error?.message || "Image upload failed");
+      }
+    } catch (error) {
+      console.error("Cloudinary Upload Error:", error);
+      alert(`Image upload failed: ${error.message}`);
+      return "";
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("📝 Form Submitted:", blogData);
+
+    if (!imageFile) {
+      alert("Please select an image.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User not authenticated. Please log in.");
+      return;
+    }
 
     try {
-      const token = localStorage.getItem("token");
+      setUploading(true);
+      const imageUrl = await uploadImageToCloudinary();
 
-      await axios.post("http://localhost:8000/blogs", blogData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+      if (!imageUrl) {
+        alert("Image upload failed. Please try again.");
+        setUploading(false);
+        return;
+      }
+
+      const newBlog = { ...blog, imgUrl: imageUrl };
+
+      await axios.post("http://localhost:8000/blogs", newBlog, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      setIsSuccess(true);
+      alert("Blog added successfully!");
+      fetchBlogs();
 
-      // Reset form after submission
-      setBlogData({
-        title: "",
-        subTitle: "",
-        image: "",
-        description: "",
-        content: "",
-        author: "",
-      });
+      setBlog({ title: "", imgUrl: "", content: "", author: "", category: "" });
+      setImageFile(null);
+      setImagePreview(null);
     } catch (error) {
-      console.error("❌ API Error Details:", error.response || error.message);
-      setMessage(error.response?.data?.message || "Error adding blog");
-      setIsSuccess(false);
+      console.error("Error adding blog:", error.response?.data || error);
+      alert(error.response?.data?.message || "Failed to add blog");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User not authenticated. Please log in.");
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:8000/blogs/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert("Blog deleted successfully!");
+      fetchBlogs();
+    } catch (error) {
+      console.error("Error deleting blog:", error);
+      alert("Failed to delete blog");
     }
   };
 
   return (
-    <div className="container mt-4">
-      <h2>Add New Blog</h2>
-
-      {message && (
-        <div
-          className={`alert ${isSuccess ? "alert-success" : "alert-danger"}`}
-        >
-          {message}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        {Object.keys(blogData).map((key) => (
-          <div className="mb-3" key={key}>
-            <label className="form-label">
-              {key.replace(/([A-Z])/g, " $1")}
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name={key}
-              value={blogData[key]}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
-        <button type="submit" className="btn btn-primary">
-          Add Blog
-        </button>
-      </form>
+    <div className="min-h-screen bg-gray-100 pb-20">
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Add Blog</h2>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          <input className="border p-2 rounded-md" type="text" name="title" placeholder="Title" value={blog.title} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="author" placeholder="Author" value={blog.author} onChange={handleChange} required />
+          <input className="border p-2 rounded-md" type="text" name="category" placeholder="Category" value={blog.category} onChange={handleChange} required />
+          <textarea className="border p-2 rounded-md col-span-2" name="content" placeholder="Content" value={blog.content} onChange={handleChange} required></textarea>
+          <input className="border p-2 rounded-md col-span-2" type="file" accept="image/*" onChange={handleImageChange} required />
+          {imagePreview && <img src={imagePreview} alt="Preview" className="w-40 h-40 object-cover mt-2 mx-auto rounded-md border" />}
+          <button type="submit" className="bg-blue-500 text-white p-2 rounded-md col-span-2 hover:bg-blue-600" disabled={uploading}>{uploading ? "Uploading..." : "Add Blog"}</button>
+        </form>
+      </div>
+      <div className="max-w-4xl mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Blogs List</h2>
+        <table className="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border p-2">Title</th>
+              <th className="border p-2">Image</th>
+              <th className="border p-2">Author</th>
+              <th className="border p-2">Category</th>
+              <th className="border p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blogs.map((c) => (
+              <tr key={c._id} className="hover:bg-gray-100">
+                <td className="border p-2">{c.title}</td>
+                <td className="border p-2">{c.imgUrl ? <img src={c.imgUrl} alt={c.title} className="h-16 w-16 object-cover rounded-md" /> : "No Image"}</td>
+                <td className="border p-2">{c.author}</td>
+                <td className="border p-2">{c.category}</td>
+                <td className="border p-2"><button className="bg-red-500 text-white px-3 py-1 rounded-md" onClick={() => handleDelete(c._id)}>Delete</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

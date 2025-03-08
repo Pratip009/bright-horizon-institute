@@ -160,7 +160,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div
           className="hidden lg:flex gap-x-1"
-          style={{ fontFamily: "Poppins, sans-serif" }}
+          style={{ fontFamily: "Ubuntu, sans-serif", fontWeight:'700' }}
         >
           {[
             { path: "/", label: "Home", icon: <FaHome /> },
@@ -203,13 +203,12 @@ const Header = () => {
               </button>
             ) : (
               <Link
-              to="/login"
-              className="px-4 py-2 rounded-md bg-[#fb2c36] text-white font-semibold shadow-md cursor-pointer text-center inline-block no-underline"
-              style={{textDecoration:"none"}}
-            >
-              Sign In
-            </Link>
-            
+                to="/login"
+                className="px-4 py-2 rounded-md bg-[#fb2c36] text-white font-semibold shadow-md cursor-pointer text-center inline-block no-underline"
+                style={{ textDecoration: "none" }}
+              >
+                Sign In
+              </Link>
             )}
 
             {user && dropdownOpen && (
@@ -223,8 +222,8 @@ const Header = () => {
                         className="block px-4 py-2 hover:bg-gray-100 transition rounded-md text-gray-700 no-underline"
                         style={{
                           textDecoration: "none",
-                          color:'green',
-                          fontWeight:'bold'
+                          color: "green",
+                          fontWeight: "bold",
                         }}
                       >
                         Admin Dashboard
@@ -232,6 +231,7 @@ const Header = () => {
                     </li>
                   )}
                   {/* Logout Option */}
+
                   <li>
                     <button
                       onClick={logout}

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { auth, adminAuth } = require("../middleware/authMiddleware");
+const { auth } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 const {
   createBlog,
   getBlogs,
@@ -10,12 +11,12 @@ const {
 } = require("../controllers/blogController");
 
 // Public Routes
-router.get("/", getBlogs); // Get all courses
-router.get("/:id", getBlogById); // Get a course by ID
+router.get("/", getBlogs);
+router.get("/:id", getBlogById);
 
 // Admin Routes (Protected)
-router.post("/", auth, adminAuth, createBlog); // Add a new course
-router.put("/:id", auth, adminAuth, updateBlog); // Update a course
-router.delete("/:id", auth, adminAuth, deleteBlog); // Delete a course
+router.post("/", auth(["admin"]), upload.single("image"), createBlog);
+router.put("/:id", auth(["admin"]), upload.single("image"), updateBlog);
+router.delete("/:id", auth(["admin"]), deleteBlog);
 
 module.exports = router;

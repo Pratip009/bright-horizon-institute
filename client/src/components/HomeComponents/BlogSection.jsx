@@ -46,7 +46,7 @@ const BlogSection = () => {
         {/* First Image */}
         <div className="relative bg-white p-3 rounded-xl shadow-[10px_10px_30px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105">
           <img
-            src="https://img.freepik.com/free-photo/education-elementary-school-learning-people-concept-group-school-kids-with-teacher-sitting-classroom-vintage-effect-style-pictures_1253-1372.jpg"
+            src="https://img.freepik.com/free-photo/female-speaker-giving-presentation-hall-university-workshop-audience-conference-hall_155003-27432.jpg?uid=R91963452&ga=GA1.1.1581216429.1736934459&semt=ais_hybrid"
             alt="Team Collaboration"
             className="rounded-xl shadow-md"
             data-aos="fade-up"

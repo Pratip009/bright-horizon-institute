@@ -8,6 +8,14 @@ const BlogDetails = () => {
     return <div className="text-center text-2xl font-semibold text-red-500 mt-10 font-[Nunito]">Blog not found</div>;
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 font-[Nunito]">
       {/* Blog Title */}
@@ -19,17 +27,16 @@ const BlogDetails = () => {
       <div className="flex flex-wrap justify-center items-center text-gray-600 text-sm space-x-3 mb-8">
         <span className="font-semibold text-gray-900">{blog.author}</span>
         <span>•</span>
-        <span>{blog.date}</span>
+        <span>{formatDate(blog.createdAt)}</span>
         <span>•</span>
-        <span className="italic">{blog.readingTime}</span>
-        <span>•</span>
+      
         <span className="px-3 py-1 bg-[#4ADE80] text-white rounded-full text-xs font-semibold">{blog.category}</span>
       </div>
 
       {/* Blog Image - Full Width */}
       <div className="w-full max-w-5xl mx-auto">
         <img 
-          src={blog.image} 
+          src={blog.imgUrl} 
           alt={blog.title} 
           className="w-full h-[500px] object-cover rounded-lg shadow-md"
         />

@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
-import GlobalApi from "../../services/GlobalApi"; 
 import Banner from "../../components/Banner";
 
 const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([]);
 
-  useEffect(() => {
-    const fetchGallery = async () => {
-      try {
-        const response = await GlobalApi.getGallery();
-        const data = response.data.data;
-
-        const formattedData = data.map((item) => ({
-          title: item.attributes.title,
-          imageUrl: item.attributes.image.data.attributes.url,
-        }));
-
-        setGalleryItems(formattedData);
-      } catch (error) {
-        console.error("Error fetching gallery:", error);
+  // Function to fetch gallery items
+  const fetchGallery = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/gallery"); // Fetch data from API
+      if (!response.ok) {
+        throw new Error("Failed to fetch gallery data");
       }
-    };
+      const data = await response.json(); // Convert response to JSON
+      setGalleryItems(data); // Update state with fetched data
+    } catch (error) {
+      console.error("Error fetching gallery data:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchGallery();
   }, []);
 
@@ -34,23 +31,23 @@ const Gallery = () => {
 
       {/* Gallery Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-        {galleryItems.map((item, index) => (
-          <div key={index} className="flex flex-col items-center rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
-            {/* Image */}
-            <img
-              className="w-full h-64 object-cover rounded-xl"
-              src={item.imageUrl}
-              alt={item.title}
-            />
+        {galleryItems.length > 0 ? (
+          galleryItems.map((item, index) => (
+            <div key={index} className="flex flex-col items-center rounded-xl shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
+              {/* Image */}
+              <img
+                className="w-full h-64 object-cover rounded-xl"
+                src={item.imageUrl}
+                alt={item.title}
+              />
 
-            {/* Title Below Image */}
-            <div className="w-full bg-white text-center p-3 mt-2 rounded-b-xl">
-              <span className="text-lg font-semibold text-gray-800">
-                {item.title}
-              </span>
+              {/* Title Below Image */}
+             
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">Loading gallery...</p>
+        )}
       </div>
     </div>
   );

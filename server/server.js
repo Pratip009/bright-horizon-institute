@@ -9,7 +9,7 @@ const userRoutes = require("./routes/userRoutes");
 const { auth } = require("./middleware/authMiddleware");
 const courseRoutes = require("./routes/courseRoutes");
 const blogRoutes = require("./routes/blogRoutes");
-
+const galleryRoutes = require("./routes/galleryRoutes");
 const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
@@ -30,12 +30,12 @@ mongoose.connection.on("error", (err) => {
 // Use routes
 app.use("/auth", authRoutes);
 app.use("/users", (req, res, next) => {
-  console.log("Headers received in /users route:", req.headers);
   next();
 });
 app.use("/users", auth(["admin"]), userRoutes);
 app.use("/courses", courseRoutes);
 app.use("/blogs", blogRoutes);
+app.use("/gallery", galleryRoutes);
 
 // PayPal configuration
 paypal.configure({
@@ -44,6 +44,9 @@ paypal.configure({
   client_secret: process.env.PAYPAL_CLIENT_SECRET,
 });
 
+app.post("/api/blogs", (req, res) => {
+  console.log("Incoming request body:", req.body);
+});
 // Route to initiate PayPal payment
 app.post("/payment", auth(["user", "admin"]), async (req, res) => {
   try {

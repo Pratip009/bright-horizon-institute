@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const auth = (roles = []) => (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    console.log("Auth Header:", authHeader); // Debugging
+  
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({ message: "No token, authorization denied" });
@@ -16,7 +16,7 @@ const auth = (roles = []) => (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded Token:", decoded); // Debugging
+    
 
     if (roles.length && !roles.includes(decoded.role)) {
       return res.status(403).json({ message: "Access denied" });

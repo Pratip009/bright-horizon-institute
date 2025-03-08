@@ -56,7 +56,7 @@ const Contact = () => {
       {/* Banner */}
       <Banner
         text="Get in Touch"
-        imageUrl="https://www.coderobo.ai/static/media/teachers_love_coderobo.f7ab8b62.jpg"
+        gradient="linear-gradient(to right, #E6A8EDFF, #FEF9D6FF)"
       />
 
       
