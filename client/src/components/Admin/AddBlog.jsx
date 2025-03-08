@@ -19,10 +19,10 @@ const AddBlog = () => {
   useEffect(() => {
     fetchBlogs();
   }, []);
-
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
   const fetchBlogs = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/blogs");
+      const { data } = await axios.get(`${API_URL}/blogs`);
       setBlogs(data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -94,7 +94,7 @@ const AddBlog = () => {
 
       const newBlog = { ...blog, imgUrl: imageUrl };
 
-      await axios.post("http://localhost:8000/blogs", newBlog, {
+      await axios.post(`${API_URL}/blogs`, newBlog, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -120,7 +120,7 @@ const AddBlog = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:8000/blogs/${id}`, {
+      await axios.delete(`${API_URL}/blogs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Blog deleted successfully!");

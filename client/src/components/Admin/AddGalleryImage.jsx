@@ -9,7 +9,7 @@ const AddGalleryImage = () => {
   const [loading, setLoading] = useState(false);
   const [galleryImages, setGalleryImages] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
-
+const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
   // Handle image selection
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -41,7 +41,7 @@ const AddGalleryImage = () => {
       const token = localStorage.getItem("token"); // Or wherever you're storing the token
 
       const response = await axios.post(
-        "http://localhost:8000/gallery",
+        `${API_URL}/gallery`,
         formData,
         {
           headers: {
@@ -68,7 +68,7 @@ const AddGalleryImage = () => {
   // Fetch all gallery images
   const fetchGalleryImages = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/gallery");
+      const response = await axios.get(`${API_URL}/gallery`);
       setGalleryImages(response.data);
     } catch (error) {
       console.error(error);
@@ -81,7 +81,7 @@ const AddGalleryImage = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.delete(
-        `http://localhost:8000/gallery/${imageId}`,
+        `${API_URL}/gallery/${imageId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

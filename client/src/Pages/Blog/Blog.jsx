@@ -14,10 +14,10 @@ const Blog = () => {
     AOS.init({ duration: 1000 });
     fetchBlogs();
   }, []);
-
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
   const fetchBlogs = async () => {
     try {
-      const response = await fetch("http://localhost:8000/blogs");
+      const response = await fetch(`${API_URL}/blogs`);
       if (!response.ok) {
         throw new Error("Failed to fetch blogs");
       }

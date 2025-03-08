@@ -13,7 +13,7 @@ const galleryRoutes = require("./routes/galleryRoutes");
 const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
-
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000"
 // MongoDB connection with error handling
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -62,8 +62,8 @@ app.post("/payment", auth(["user", "admin"]), async (req, res) => {
         payment_method: "paypal",
       },
       redirect_urls: {
-        return_url: "http://localhost:8000/success",
-        cancel_url: "http://localhost:8000/failed",
+        return_url: `${BASE_URL}/success`,
+        cancel_url: `${BASE_URL}/failed`,
       },
       transactions: [
         {

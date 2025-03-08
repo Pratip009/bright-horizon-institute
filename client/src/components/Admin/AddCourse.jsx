@@ -20,10 +20,10 @@ const AddCourse = () => {
   useEffect(() => {
     fetchCourses();
   }, []);
-
+const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
   const fetchCourses = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/courses");
+      const { data } = await axios.get(`${API_URL}/courses`);
       setCourses(data);
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -38,7 +38,7 @@ const AddCourse = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:8000/courses", course, {
+      await axios.post(`${API_URL}/courses`, course, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Course added successfully");
@@ -64,7 +64,7 @@ const AddCourse = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8000/courses/${id}`, {
+      await axios.delete(`${API_URL}/courses/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Course deleted successfully");

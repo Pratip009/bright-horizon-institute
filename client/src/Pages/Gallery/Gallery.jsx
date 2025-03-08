@@ -3,11 +3,11 @@ import Banner from "../../components/Banner";
 
 const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([]);
-
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
   // Function to fetch gallery items
   const fetchGallery = async () => {
     try {
-      const response = await fetch("http://localhost:8000/gallery"); // Fetch data from API
+      const response = await fetch(`${API_URL}/gallery`); // Fetch data from API
       if (!response.ok) {
         throw new Error("Failed to fetch gallery data");
       }

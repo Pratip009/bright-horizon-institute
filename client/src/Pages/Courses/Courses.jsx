@@ -6,12 +6,12 @@ const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
   // Fetch courses from backend API on component mount
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://localhost:8000/courses"); // Replace with actual backend URL
+        const response = await fetch(`${API_URL}/courses`); // Replace with actual backend URL
         if (!response.ok) {
           throw new Error("Failed to fetch courses.");
         }

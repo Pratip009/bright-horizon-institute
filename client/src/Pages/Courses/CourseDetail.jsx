@@ -18,12 +18,12 @@ const CourseDetail = () => {
   const { isSignedIn } = useUser();
   const [course, setCourse] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-
+const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
   useEffect(() => {
     AOS.init(); // Initialize AOS for animations
 
     // Fetch from localhost
-    fetch("http://localhost:8000/courses")
+    fetch(`${API_URL}/courses`)
       .then((response) => response.json())
       .then((data) => {
         // Update to use '_id' instead of 'id'

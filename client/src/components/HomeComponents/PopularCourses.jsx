@@ -13,10 +13,10 @@ export default function PopularCourses() {
       easing: "ease-in-out",
       once: true, // Animation occurs only once
     });
-
+const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000"
     const fetchCourses = async () => {
       try {
-        const response = await fetch("http://localhost:8000/courses");
+        const response = await fetch(`${API_URL}/courses`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

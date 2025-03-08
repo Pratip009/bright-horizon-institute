@@ -7,7 +7,7 @@ import "aos/dist/aos.css";
 const PaymentOptions = () => {
   const location = useLocation();
   const [loading, setLoading] = useState({ full: false, partial: false });
-
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:8000";
   useEffect(() => {
     window.scrollTo(0, 0);
     AOS.init({ duration: 1000 });
@@ -34,7 +34,7 @@ const PaymentOptions = () => {
     setLoading((prev) => ({ ...prev, [type]: true }));
 
     try {
-      const res = await axios.post("http://localhost:8000/payment", {
+      const res = await axios.post(`${API_URL}/payment`, {
         amount,
         return_url: "http://localhost:3000/success",
       });
