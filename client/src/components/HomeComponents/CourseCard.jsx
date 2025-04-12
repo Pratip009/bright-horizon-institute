@@ -1,11 +1,23 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import { FaClock, FaRegArrowAltCircleRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
+import AuthContext from "../../context/AuthContext";
 import "./CourseCard.css";
 
-
 const CourseCard = ({ courses }) => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // Get the user from context
+
+  const handleViewProgramClick = (courseId) => {
+    if (user) {
+      navigate(`/courses/${courseId}`);
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="courses-container">
       {courses.map((course) => (
@@ -44,15 +56,17 @@ const CourseCard = ({ courses }) => {
           </div>
 
           {/* Button */}
-          <Link to={`/courses/${course._id}`} className="view-button">
-            <button style={{
-              display:'flex',
-              alignItems:'center',
-              justifyContent:'center',
-            }}>
-              View Programs <FaRegArrowAltCircleRight className="ml-3" />
-            </button>
-          </Link>
+          <button
+            className="view-button"
+            onClick={() => handleViewProgramClick(course._id)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            View Programs <FaRegArrowAltCircleRight className="ml-3" />
+          </button>
         </div>
       ))}
     </div>
