@@ -9,6 +9,7 @@ import { useContext } from "react";
 
 import AuthContext from "../../context/AuthContext";
 const Header = () => {
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [coursesData, setCoursesData] = useState([]);
@@ -38,26 +39,36 @@ const Header = () => {
   useEffect(() => {
     console.log("User data from context:", user);
   }, [user]);
-  // Close menu when navigating
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
   // Fetch courses data
   useEffect(() => {
-    fetch("/courses.json")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch(`${API_URL}/courses`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
         setCoursesData(data);
-        console.log("Courses Loaded:", data); // Debugging
-      })
-      .catch((error) => console.error("Error fetching courses:", error));
+        console.log("Courses from API:", data);
+      } catch (error) {
+        console.error("Error fetching courses from API:", error);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   // Auto filter courses that start with searchQuery
   useEffect(() => {
     if (!Array.isArray(coursesData) || searchQuery.trim() === "") {
       setFilteredCourses([]);
+    
       return;
     }
 
@@ -130,25 +141,26 @@ const Header = () => {
                 <div
                   key={course.id}
                   className="flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-gray-100 transition"
-                  onClick={() => handleCourseClick(course.id)}
+                  onClick={() => handleCourseClick(course._id)}
                 >
                   {/* Course Image - Circular */}
                   <img
-                    src={course.image}
+                    src={course.imgUrl}
                     alt={course.title}
                     className="w-12 h-12 rounded-full object-cover border border-gray-300"
                   />
 
                   {/* Course Details */}
                   <div className="flex flex-col">
-                    <span className="font-semibold text-gray-800">
+                    <span className="text-base font-semibold text-gray-900 tracking-tight">
                       {course.title}
                     </span>
-                    <span className="text-sm text-gray-600">
-                      {course.time} | {course.programTime}
+                    <span className="text-sm text-gray-500 mt-0.5">
+                      {course.totalHours} • {course.duration}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      {course.certification} - {course.credential}
+                    <span className="text-sm text-gray-400">
+                      🎓 {course.certification} &nbsp;|&nbsp; 🏅{" "}
+                      {course.credential}
                     </span>
                   </div>
                 </div>
@@ -160,7 +172,7 @@ const Header = () => {
         {/* Desktop Navigation */}
         <div
           className="hidden lg:flex gap-x-1"
-          style={{ fontFamily: "Ubuntu, sans-serif", fontWeight:'700' }}
+          style={{ fontFamily: "Ubuntu, sans-serif", fontWeight: "700" }}
         >
           {[
             { path: "/", label: "Home", icon: <FaHome /> },

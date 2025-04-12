@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Banner from "../../components/Banner";
+import SpinnerLoader from "../../components/Loader";
 
 const Gallery = () => {
   const [galleryItems, setGalleryItems] = useState([]);
@@ -48,9 +49,9 @@ const Gallery = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 col-span-full">
-            Loading gallery...
-          </p>
+          <div className="min-h-screen flex items-center justify-center bg-white">
+            <SpinnerLoader size={35} />
+          </div>
         )}
       </div>
     </div>

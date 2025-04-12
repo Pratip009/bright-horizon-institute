@@ -1,103 +1,109 @@
-import PropTypes from "prop-types"; // Import PropTypes
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+// Testimonials data
 const testimonials = [
   {
     id: 1,
     name: "Paloma E",
     role: "Freelance React Developer",
-    image:
-      "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-1.png",
-    review:
-      "“I like the openness of conversations, how well everyone communicates especially ms Nicoles when things get complicated. The videos and other resources are very helpful when it comes to being able to visually seeing what were previously lectured on. Also a fan of how we separate certain assignments.”",
+    image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-1.png",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
   },
   {
     id: 2,
     name: "Jacob Jones",
     role: "Digital Marketer",
-    image:
-      "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-2.png",
-    review:
-      "“First, I would like to start with Ms. Nicole. She is amazing teacher. She explains the information in a way that you'll understand and make the class fun at the same time. I enjoy the videos and triages because I get to see hands on experience of the information. The PowerPoints and lectures are  helpful with understanding the terms in the book as well. ”",
+    image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-2.png",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
   },
   {
     id: 3,
     name: "Jenny Wilson",
     role: "UI/UX Designer",
-    image:
-      "https://media.istockphoto.com/id/1322139094/photo/multiethnic-colleagues-sitting-at-desk-looking-at-laptop-computer-in-office.jpg?s=2048x2048&w=is&k=20&c=IFXXwPnsX6__wcVlxOWJI-Ytn_OJrJ4YyTenlfaFXo8=",
-    review:
-      "“I appreciate all the resources and extra help that is provided. Whenever I had a question or concern Mrs. Fatima was always there to help. The MA teacher, Mrs. Meadows, is very attentive. She is knowledgeable and has much experience. So, she is always able to answer our questions and help us. ”",
+    image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-2.png",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
   },
 ];
 
-// TestimonialCard Component
-const TestimonialCard = ({ testimonial }) => (
-  <div
-    className="flex flex-col overflow-hidden shadow-xl"
-    data-aos="fade-up" // Adding AOS fade-up animation
-  >
-    <div className="flex flex-col justify-between flex-1 p-6 bg-white lg:py-8 lg:px-7">
-      <div className="flex-1">
-        <div className="flex items-center">
-          {Array(5)
-            .fill()
-            .map((_, index) => (
-              <svg
-                key={index}
-                className="w-5 h-5 text-[#FDB241]"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ))}
+// Testimonial Card Component
+const TestimonialCard = ({ testimonial }) => {
+  return (
+    <div
+      className="relative group bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-1"
+      data-aos="zoom-in"
+      data-aos-delay={testimonial.id * 150}
+    >
+      {/* Gradient Overlay on Hover */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+      {/* Glassmorphism Background Effect */}
+      <div className="absolute inset-0 bg-white/70 backdrop-blur-sm rounded-3xl"></div>
+
+      <div className="relative flex flex-col p-6 lg:p-8">
+        <div className="relative overflow-hidden rounded-2xl mb-6 border border-gray-100/50 shadow-sm group-hover:shadow-md transition-all duration-300">
+          <video
+            controls
+            preload="metadata"
+            className="w-full h-auto"
+            style={{ aspectRatio: "16/9", maxWidth: "100%" }}
+            onError={(e) => console.error("Video failed to load:", testimonial.videoUrl, e)}
+          >
+            <source src={testimonial.videoUrl} type="video/mp4" />
+            <img
+              src={testimonial.image}
+              alt="Video unavailable"
+              className="w-full h-auto object-cover"
+              style={{ aspectRatio: "16/9" }}
+            />
+          </video>
+          {/* Subtle Play Icon Overlay */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-30 transition-opacity duration-300 pointer-events-none">
+            <svg
+              className="w-12 h-12 text-white drop-shadow-md"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
         </div>
 
-        <blockquote className="flex-1 mt-8">
-          <p className="text-lg leading-relaxed text-gray-900">
-            {testimonial.review}
-          </p>
-        </blockquote>
-      </div>
-
-      <div className="flex items-center mt-8">
-        <img
-          className="flex-shrink-0 object-cover rounded-full w-11 h-11"
-          src={testimonial.image}
-          alt={testimonial.name}
-        />
-        <div className="ml-4">
-          <p className="text-base font-bold text-gray-900">
-            {testimonial.name}
-          </p>
-          <p className="mt-0.5 text-sm text-gray-600">{testimonial.role}</p>
+        <div className="flex items-center gap-4 z-10">
+          <img
+            src={testimonial.image}
+            alt={testimonial.name}
+            className="w-14 h-14 rounded-full object-cover border-2 border-blue-200/50 transition-transform duration-300 group-hover:scale-110"
+          />
+          <div>
+            <p className="text-lg font-semibold text-gray-900 tracking-tight">{testimonial.name}</p>
+            <p className="text-sm text-gray-600 font-medium">{testimonial.role}</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-// Define PropTypes for TestimonialCard
 TestimonialCard.propTypes = {
   testimonial: PropTypes.shape({
+    id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     role: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    review: PropTypes.string.isRequired,
+    videoUrl: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-// TestimonialSection Component
+// Testimonial Section Component
 const TestimonialSection = () => {
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Set the duration of the animation
-      easing: "ease-in-out", // Apply easing for smooth animation
-      once: true, // Animation runs only once
+      duration: 1000,
+      easing: "ease-in-out",
+      once: true,
     });
   }, []);
 
@@ -105,15 +111,15 @@ const TestimonialSection = () => {
     <section className="py-12 bg-white sm:py-16 lg:py-20">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
+          {/* Original Heading Section - Unchanged */}
           <div className="text-center">
             <p className="text-base text-black sm:text-xl">
               People have said how good Bright Horizon Institute
             </p>
-
             <h1
               className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
               data-aos="fade-up"
-              data-aos-delay="400" // Adding a slight delay for this text animation
+              data-aos-delay="400"
             >
               Our happy clients say
               <span className="mr-2"></span>
@@ -139,11 +145,7 @@ const TestimonialSection = () => {
 
             <div className="relative grid max-w-lg grid-cols-1 gap-6 mx-auto md:max-w-none lg:gap-10 md:grid-cols-3">
               {testimonials.map((testimonial) => (
-                <TestimonialCard
-                  key={testimonial.id}
-                  testimonial={testimonial}
-                  data-aos="fade-up" // Add fade-up animation to each card
-                />
+                <TestimonialCard key={testimonial.id} testimonial={testimonial} />
               ))}
             </div>
           </div>

@@ -4,7 +4,7 @@ import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaClock, FaBookOpen } from "react-icons/fa";
 import Banner from "../../components/Banner";
-
+import SpinnerLoader from "../../components/Loader";
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,14 +52,19 @@ const Blog = () => {
     navigate(`/blog/${blog._id}`); // ✅ Correct path
   };
 
-  if (loading) return <p className="text-center mt-5">Loading blogs...</p>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <SpinnerLoader size={35} />
+      </div>
+    );
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="container mx-auto px-4 mt-10">
       <Banner
         text="Blogs"
-        gradient="linear-gradient(to right, #A8A8EDFF, #fed6e3)"
+        imageUrl="https://img.freepik.com/free-photo/people-working-tech-brand-together_23-2150966134.jpg?semt=ais_country_boost&w=740"
       />
 
       <div className="grid md:grid-cols-3 gap-8 mt-6">

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
+import expertImg from "../../assets/images/bhi11.jpg"
 const ExpertSkills = () => {
   const navigate = useNavigate();
 
@@ -81,7 +82,7 @@ const ExpertSkills = () => {
             <div data-aos="fade-left" data-aos-delay="500">
               <img
                 className="w-full rounded-lg"
-                src="https://img.freepik.com/free-photo/congratulations-you-did-test-very-well_637285-8618.jpg?t=st=1738663474~exp=1738667074~hmac=38e859e2dfafd9409db82429aad014969af2d7bd265182cad287ff40f78dbe56&w=996"
+                src={expertImg}
                 alt="Hero Illustration"
               />
             </div>

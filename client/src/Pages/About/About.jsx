@@ -4,6 +4,7 @@ import StatsSection from "../../components/about/StatsSection";
 import Testimonials from "../../components/about/Testimonials";
 import Banner from "../../components/Banner";
 import FAQ from "../../components/about/Faq";
+import bannerImg from "../../assets/images/ghibli1.png";
 
 const About = () => {
   useEffect(() => {
@@ -77,15 +78,12 @@ const About = () => {
       {/* Content */}
       <div className="container">
         <div style={{ marginTop: "2rem" }}>
-          <Banner
-            text="About Us"
-            gradient="linear-gradient(to right, #7EEDF7FF, #fed6e3)"
-          />
+          <Banner text="About Us" imageUrl={bannerImg} />
         </div>
         <ExpertSkills />
         <StatsSection />
         <Testimonials />
-        <FAQ/>
+        <FAQ />
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useUser, SignInButton } from "@clerk/clerk-react";
+
 import Banner from "../../components/Banner";
+import SpinnerLoader from "../../components/Loader";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -14,42 +15,46 @@ import {
 
 const CourseDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Use the id from URL params
-  const { isSignedIn } = useUser();
+  const { id } = useParams();
+
   const [course, setCourse] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-  useEffect(() => {
-    AOS.init(); // Initialize AOS for animations
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
-    // Fetch from localhost
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  useEffect(() => {
+    AOS.init();
+
+    // Check auth status from localStorage
+    const token = localStorage.getItem("token");
+    setIsSignedIn(!!token);
+
+    // Fetch courses
     fetch(`${API_URL}/courses`)
       .then((response) => response.json())
       .then((data) => {
-        // Update to use '_id' instead of 'id'
-        const selectedCourse = data.find(
-          (course) => course._id === id // Compare with '_id' field
-        );
+        const selectedCourse = data.find((course) => course._id === id);
         setCourse(selectedCourse);
       })
       .catch((error) => {
         console.error("Error fetching course data:", error);
-        setCourse(null); // In case of error
+        setCourse(null);
       });
   }, [id]);
 
   const handleEnroll = () => {
     if (isSignedIn) {
-      navigate(`/payment/${id}`, { state: { course } }); // Proceed to payment
+      navigate(`/payment/${id}`, { state: { course } });
+    } else {
+      navigate("/login");
     }
   };
 
   if (course === null) {
     return (
-      <div className="text-center py-12">
-        <p className="text-xl font-semibold text-gray-700">
-          Loading or Course not found!
-        </p>
+      <div className="flex items-center justify-center text-center py-12">
+        <SpinnerLoader size={48} />
       </div>
     );
   }
@@ -66,6 +71,7 @@ const CourseDetail = () => {
     content,
     certification,
   } = course;
+
   const courseContents = content || [];
 
   return (
@@ -74,10 +80,10 @@ const CourseDetail = () => {
         text={title}
         imageUrl="https://static.vecteezy.com/system/resources/thumbnails/046/946/744/small_2x/school-students-in-modern-computer-based-classroom-in-school-education-of-programming-languages-video.jpg"
       />
+
       <div className="flex flex-col lg:flex-row mt-8 px-4 md:px-12">
-        {/* Left Side: Course Details */}
+        {/* Left: Details */}
         <div className="lg:w-2/3 w-full lg:pr-12 mb-6 lg:mb-0">
-          {/* Course Image */}
           <img
             src={imgUrl}
             alt={title}
@@ -85,7 +91,7 @@ const CourseDetail = () => {
             data-aos="fade-up"
           />
 
-          {/* Tabs Navigation */}
+          {/* Tabs */}
           <div className="flex justify-center space-x-6 border-b border-gray-300 mb-6 mt-4">
             {["description", "contents", "duration"].map((tab) => (
               <button
@@ -139,7 +145,7 @@ const CourseDetail = () => {
           </div>
         </div>
 
-        {/* Right Side: Course Sidebar */}
+        {/* Right: Sidebar */}
         <div
           className="lg:w-1/3 w-full bg-white p-6 rounded-lg shadow-lg lg:mt-0 mt-6"
           style={{ maxHeight: "fit-content" }}
@@ -154,6 +160,7 @@ const CourseDetail = () => {
           <p className="text-2xl text-gray-700 mb-4">
             <span className="text-green-400 text-3xl font-bold">${price}</span>
           </p>
+
           <div className="text-md text-gray-700 mb-6">
             <p className="flex items-center">
               <FaClock className="mr-2 text-red-600" />
@@ -181,27 +188,18 @@ const CourseDetail = () => {
             </p>
           </div>
 
-          {/* Enroll Button */}
-          {isSignedIn ? (
-            <button
-              className="w-full py-3 px-4 bg-green-400 text-white text-2xl font-semibold rounded-lg hover:bg-green-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              data-aos="zoom-in"
-              onClick={handleEnroll}
-            >
-              Enroll Now
-            </button>
-          ) : (
-            <SignInButton mode="modal">
-              <button
-                className="w-full py-3 px-4 bg-blue-500 text-white text-2xl font-semibold rounded-lg hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                data-aos="zoom-in"
-              >
-                Sign in to Enroll
-              </button>
-            </SignInButton>
-          )}
+          {/* Enroll / Sign In Button */}
+          <button
+            className={`w-full py-3 px-4 ${
+              isSignedIn ? "bg-green-400 hover:bg-green-700" : "bg-blue-500 hover:bg-blue-700"
+            } text-white text-2xl font-semibold rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+            data-aos="zoom-in"
+            onClick={handleEnroll}
+          >
+            {isSignedIn ? "Enroll Now" : "Sign in to Enroll"}
+          </button>
 
-          {/* YouTube Video */}
+          {/* Video */}
           <div className="mt-6 mb-4" data-aos="fade-up">
             <iframe
               className="w-full h-64 rounded-lg shadow-lg"

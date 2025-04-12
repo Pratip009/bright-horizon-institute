@@ -62,7 +62,7 @@ export default function PopularCourses() {
             ))}
         </div>
       ) : (
-        <div data-aos="fade-up" data-aos-delay="600">
+        <div>
           <CourseCard courses={courses} />
         </div>
       )}

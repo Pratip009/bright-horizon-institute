@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import CourseCard from "../../components/HomeComponents/CourseCard";
 import Banner from "../../components/Banner";
-
+import SpinnerLoader from "../../components/Loader";
+import courseImg from "../../assets/images/illu.jpg";
 const Courses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ const Courses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${API_URL}/courses`); // Replace with actual backend URL
+        const response = await fetch(`${API_URL}/courses`);
         if (!response.ok) {
           throw new Error("Failed to fetch courses.");
         }
@@ -28,7 +29,12 @@ const Courses = () => {
   }, []);
 
   // Display loading or error state
-  if (loading) return <div className="text-center py-8">Loading...</div>;
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <SpinnerLoader size={35} />
+      </div>
+    );
   if (error) return <div className="text-center py-8">Error: {error}</div>;
 
   return (
@@ -98,10 +104,7 @@ const Courses = () => {
       {/* Main Content */}
       <div className="container">
         <div style={{ marginTop: "3rem" }}>
-          <Banner
-            text="Courses"
-            gradient="linear-gradient(to right, #A8EDC1FF, #fed6e3)"
-          />
+          <Banner text="Courses" imageUrl={courseImg} />
         </div>
         <section className="pt-12 pb-12 sm:pb-16 lg:pt-8">
           {/* Displaying courses */}

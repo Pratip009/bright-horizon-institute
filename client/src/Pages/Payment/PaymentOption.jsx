@@ -33,11 +33,26 @@ const PaymentOptions = () => {
   const handlePayment = async (amount, type) => {
     setLoading((prev) => ({ ...prev, [type]: true }));
 
+    const token = localStorage.getItem("token"); // or sessionStorage
+    console.log("Retrieved token:", token);
+
     try {
-      const res = await axios.post(`${API_URL}/payment`, {
-        amount,
-        return_url: "http://localhost:3000/success",
-      });
+      console.log("Initiating payment with amount:", amount);
+
+      const res = await axios.post(
+        `${API_URL}/payment`,
+        {
+          amount,
+          return_url: "http://localhost:3000/success",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // add token to request header
+          },
+        }
+      );
+
+      console.log("Payment response:", res.data);
 
       if (res.data.approval_url) {
         window.location.href = res.data.approval_url;
@@ -46,6 +61,13 @@ const PaymentOptions = () => {
       }
     } catch (error) {
       console.error("Payment Error:", error);
+      if (error.response) {
+        console.error(
+          "Server responded with:",
+          error.response.status,
+          error.response.data
+        );
+      }
       alert("Payment initiation failed. Please try again.");
     } finally {
       setLoading((prev) => ({ ...prev, [type]: false }));

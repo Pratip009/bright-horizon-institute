@@ -5,6 +5,7 @@ import AddCourse from "./AddCourse";
 import AddBlog from "./AddBlog";
 import AddGalleryImage from "./AddGalleryImage";
 
+
 const AdminDashboard = () => {
   const [active, setActive] = useState("Users");
 
@@ -16,6 +17,7 @@ const AdminDashboard = () => {
         {active === "Add Courses" && <AddCourse />}
         {active === "Gallery" && <AddGalleryImage />}
         {active === "Blog" && <AddBlog />}
+     
         {active === "Dashboard" && <h1>Welcome to Admin Panel</h1>}
       </div>
     </div>

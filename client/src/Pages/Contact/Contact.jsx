@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
 import AOS from "aos";
@@ -40,7 +39,12 @@ const Contact = () => {
       setErrors({});
 
       emailjs
-        .send("service_tsdlp8n", "template_524rzr5", formData, "9Kt5rK_zeTmTDTNS_")
+        .send(
+          "service_tsdlp8n",
+          "template_524rzr5",
+          formData,
+          "9Kt5rK_zeTmTDTNS_"
+        )
         .then(() => {
           setSuccess("Your message has been sent successfully!");
           setFormData({ name: "", email: "", message: "" });
@@ -56,20 +60,23 @@ const Contact = () => {
       {/* Banner */}
       <Banner
         text="Get in Touch"
-        gradient="linear-gradient(to right, #E6A8EDFF, #FEF9D6FF)"
+        imageUrl="https://www.stitchtools.com/assets/images/contact/contact-banner.jpg"
       />
 
-      
       <div className="grid md:grid-cols-2 gap-12 items-center mt-5">
         {/* Contact Info */}
         <div className="space-y-6" data-aos="fade-right">
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaMapMarkerAlt className="text-[#4ADE80] text-2xl animate-bounce" />
-            <span className="text-gray-700">591 Summit avenue jersey city NJ 07306</span>
+            <span className="text-gray-700">
+              591 Summit avenue jersey city NJ 07306
+            </span>
           </div>
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaEnvelope className="text-[#4ADE80] text-2xl animate-bounce" />
-            <span className="text-gray-700">training@brighthorizoninstitute.com</span>
+            <span className="text-gray-700">
+              training@brighthorizoninstitute.com
+            </span>
           </div>
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaPhone className="text-[#4ADE80] text-2xl animate-bounce" />

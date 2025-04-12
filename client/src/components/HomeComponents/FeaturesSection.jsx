@@ -19,27 +19,27 @@ export default function FeaturesSection() {
   const features = [
     {
       icon: brain,
-      title: "Learn the Latest Top Skills",
+      title: "Learn the Latest In-Demand Skills",
       description:
-        "Learning top skills can bring an extraordinary outcome in a career.",
+        "Master top industry skills that can boost your career and open new opportunities. Stay ahead in the job market by learning cutting-edge skills that employers value the most.",
     },
     {
       icon: earth,
       title: "Learn in Your Own Pace",
       description:
-        "Everyone prefers to enjoy learning at their own pace & that gives a great result.",
+        "Enjoy flexible, self-paced learning that fits your schedule. Learn at your convenience and achieve better results with a personalized approach to education.",
     },
     {
       icon: laptop,
       title: "Learn From Industry Experts",
       description:
-        "Experienced teachers can assist in learning faster with their best approaches!",
+        "Gain knowledge from experienced professionals who bring real-world expertise to your learning journey. Their proven teaching methods help you master skills faster and more effectively.",
     },
     {
       icon: verify,
       title: "Enjoy Learning From Anywhere",
       description:
-        "We are delighted to give you options to enjoy learning from anywhere in the world.",
+        "Access high-quality education anytime, anywhere! Our online learning platform lets you study from any location, giving you the freedom and flexibility to learn at your convenience.",
     },
   ];
 
@@ -62,10 +62,11 @@ export default function FeaturesSection() {
       </h1>
 
       <p className="mt-8 text-base text-black sm:text-xl">
-        Finding your own space and utilizing better learning options can result{" "}
-        <br />
-        in faster learning than the traditional ways. Enjoy the beauty of
-        eLearning!
+        Unlock endless learning possibilities with affordable online courses and
+        flexible learning opportunities. Learn at your own pace and discover
+        smarter,
+        <br /> faster ways to gain knowledge compared to traditional methods.
+        Experience the power of eLearning and transform your future!
       </p>
 
       <div
@@ -76,7 +77,7 @@ export default function FeaturesSection() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="bg-white p-6 rounded-xl text-center shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col min-h-full"
+            className="bg-white p-6 rounded-xl text-center shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex flex-col justify-between h-full"
             data-aos="flip-left"
             data-aos-delay={index * 200}
           >
@@ -84,13 +85,13 @@ export default function FeaturesSection() {
             <img
               src={feature.icon}
               alt={feature.title}
-              className="w-16 h-16 mx-auto mb-4"
+              className="w-16 h-16 mx-auto mb-4 transform transition-all duration-300 hover:scale-110"
               data-aos="zoom-in"
             />
 
             {/* Title */}
             <h4
-              className="text-lg font-semibold text-gray-900"
+              className="text-lg font-semibold text-gray-900 mb-2"
               style={{ fontFamily: "Quicksand" }}
             >
               {feature.title}
@@ -98,7 +99,7 @@ export default function FeaturesSection() {
 
             {/* Description */}
             <p
-              className="text-gray-600 mt-2 flex-grow"
+              className="text-gray-600 text-sm mb-4"
               style={{ fontFamily: "Nunito" }}
             >
               {feature.description}
@@ -107,8 +108,8 @@ export default function FeaturesSection() {
             {/* Button */}
             <a
               href="/courses"
-              className="text-white font-medium mt-6 bg-[#4ADE80] px-6 py-3 rounded-full transition-all duration-300 hover:bg-[#57ad58] hover:scale-105 shadow-md inline-block"
-              style={{ textDecoration: "None" }}
+              className="bg-[#4ADE80] text-white font-medium px-6 py-2 rounded-full transition-all duration-300 hover:bg-[#57ad58] hover:scale-105 shadow-md inline-block mt-auto"
+              style={{ textDecoration: "none" }}
               data-aos="fade-up"
             >
               Start Now!

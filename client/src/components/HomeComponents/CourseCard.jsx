@@ -9,7 +9,7 @@ const CourseCard = ({ courses }) => {
   return (
     <div className="courses-container">
       {courses.map((course) => (
-        <div key={course.id} className="card">
+        <div key={course._id} className="card">
           {/* Image section */}
           <div className="img">
             <img src={course.imgUrl} alt={course.title} />

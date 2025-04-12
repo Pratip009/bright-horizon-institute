@@ -42,7 +42,10 @@ const BlogSection = () => {
       ></div>
 
       {/* Images Section */}
-      <div className="flex-1 grid grid-cols-2 gap-6 relative" data-aos="zoom-in">
+      <div
+        className="flex-1 grid grid-cols-2 gap-6 relative"
+        data-aos="zoom-in"
+      >
         {/* First Image */}
         <div className="relative bg-white p-3 rounded-xl shadow-[10px_10px_30px_rgba(0,0,0,0.2)] transition-transform duration-300 hover:scale-105">
           <img
@@ -85,7 +88,7 @@ const BlogSection = () => {
         </p>
 
         <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-          Develop Your Skills, Learn Something New, and{" "}
+        Enhance Your Skills & Career,<br />Learn Something New, and{" "}
           <span className="mr-2"></span>
           <div className="relative inline-flex">
             <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
@@ -99,11 +102,11 @@ const BlogSection = () => {
         </h1>
 
         <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up">
-          We understand that better learning can make a significant change to
-          reach students from all over the world! Giving options to learn better
-          always offers the best outcomes! Our mission is to provide students
-          with high-quality training programs and prepare them for a competitive
-          job market.
+          Develop in-demand skills, explore new knowledge, and accelerate your
+          growth with our expert-led courses. We believe that quality education
+          can make a global impact, helping students worldwide achieve their
+          career goals. With flexible learning options, we ensure the best
+          learning experience for everyone.
         </p>
 
         {/* Features List */}
