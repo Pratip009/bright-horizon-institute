@@ -1,13 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/slider/bhilogo.svg";
-import { FaSearch, FaHome, FaPhoneVolume } from "react-icons/fa";
-import { MdVoiceChat, MdCastForEducation } from "react-icons/md";
-import { FaBlog } from "react-icons/fa";
-import { RiGalleryFill } from "react-icons/ri";
-import { useContext } from "react";
+import { FaSearch } from "react-icons/fa";
 
 import AuthContext from "../../context/AuthContext";
+
 const Header = () => {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,8 +23,7 @@ const Header = () => {
     }
   };
 
-  // Attach event listener when dropdown is open
-  useState(() => {
+  useEffect(() => {
     if (dropdownOpen) {
       document.addEventListener("click", handleClickOutside);
     } else {
@@ -37,52 +33,34 @@ const Header = () => {
   }, [dropdownOpen]);
 
   useEffect(() => {
-    console.log("User data from context:", user);
-  }, [user]);
-  useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  // Fetch courses data
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await fetch(`${API_URL}/courses`);
-
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
         setCoursesData(data);
-        console.log("Courses from API:", data);
       } catch (error) {
         console.error("Error fetching courses from API:", error);
       }
     };
-
     fetchCourses();
   }, []);
 
-  // Auto filter courses that start with searchQuery
   useEffect(() => {
     if (!Array.isArray(coursesData) || searchQuery.trim() === "") {
       setFilteredCourses([]);
-    
       return;
     }
-
-    console.log("Filtering for:", searchQuery);
-
     const filtered = coursesData.filter((course) =>
       course.title?.toLowerCase().startsWith(searchQuery.toLowerCase())
     );
-
-    console.log("Filtered Courses:", filtered);
     setFilteredCourses(filtered);
   }, [searchQuery, coursesData]);
-
-  // Hide dropdown when clicking outside
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -97,13 +75,12 @@ const Header = () => {
   const handleCourseClick = (courseId) => {
     setSearchQuery("");
     setFilteredCourses([]);
-    navigate(`/courses/${courseId}`); // Navigating using course ID instead of slug
+    navigate(`/courses/${courseId}`);
   };
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-white shadow-md border-b border-gray-200">
       <div className="px-6 mx-auto max-w-8xl sm:px-8 lg:px-12 flex items-center justify-between h-20">
-        {/* Logo */}
         <Link to="/">
           <img
             src={logo}
@@ -112,7 +89,6 @@ const Header = () => {
           />
         </Link>
 
-        {/* Search Bar */}
         <div
           className="hidden lg:flex flex-grow justify-center relative"
           ref={searchRef}
@@ -134,7 +110,6 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Search Results Dropdown */}
           {filteredCourses.length > 0 && (
             <div className="absolute top-full left-0 w-full bg-white shadow-lg border border-gray-300 rounded-md mt-2 z-[999] max-h-60 overflow-y-auto">
               {filteredCourses.map((course) => (
@@ -143,14 +118,11 @@ const Header = () => {
                   className="flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-gray-100 transition"
                   onClick={() => handleCourseClick(course._id)}
                 >
-                  {/* Course Image - Circular */}
                   <img
                     src={course.imgUrl}
                     alt={course.title}
                     className="w-12 h-12 rounded-full object-cover border border-gray-300"
                   />
-
-                  {/* Course Details */}
                   <div className="flex flex-col">
                     <span className="text-base font-semibold text-gray-900 tracking-tight">
                       {course.title}
@@ -169,22 +141,17 @@ const Header = () => {
           )}
         </div>
 
-        {/* Desktop Navigation */}
         <div
           className="hidden lg:flex gap-x-1"
-          style={{ fontFamily: "Ubuntu, sans-serif", fontWeight: "700" }}
+          style={{ fontFamily: "Kanit, sans-serif", fontWeight: "700" }}
         >
           {[
-            { path: "/", label: "Home", icon: <FaHome /> },
-            { path: "/about", label: "About", icon: <MdVoiceChat /> },
-            {
-              path: "/courses",
-              label: "Courses",
-              icon: <MdCastForEducation />,
-            },
-            { path: "/blog", label: "Blog", icon: <FaBlog /> },
-            { path: "/gallery", label: "Gallery", icon: <RiGalleryFill /> },
-            { path: "/contact", label: "Contact", icon: <FaPhoneVolume /> },
+            { path: "/", label: "Home" },
+            { path: "/about", label: "About" },
+            { path: "/courses", label: "Courses" },
+            { path: "/blog", label: "Blog" },
+            { path: "/gallery", label: "Gallery" },
+            { path: "/contact", label: "Contact" },
           ].map(({ path, label }) => {
             const isActive = location.pathname === path;
             return (
@@ -206,7 +173,7 @@ const Header = () => {
             {user ? (
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent immediate closing
+                  e.stopPropagation();
                   setDropdownOpen(!dropdownOpen);
                 }}
                 className="text-gray-700 font-semibold px-4 py-2 rounded-md bg-gray-100 shadow-md cursor-pointer"
@@ -217,7 +184,6 @@ const Header = () => {
               <Link
                 to="/login"
                 className="px-4 py-2 rounded-md bg-[#fb2c36] text-white font-semibold shadow-md cursor-pointer text-center inline-block no-underline"
-                style={{ textDecoration: "none" }}
               >
                 Sign In
               </Link>
@@ -226,24 +192,17 @@ const Header = () => {
             {user && dropdownOpen && (
               <div className="absolute top-full mt-1 right-0 w-48 bg-white shadow-lg border rounded-lg z-50">
                 <ul className="p-0 text-gray-700 text-sm">
-                  {/* Admin Dashboard (Only for Admins) */}
-                  {user?.role === "admin" && ( // ✅ Safe check
+                  {user?.role === "admin" && (
                     <li>
                       <Link
                         to="/admin"
                         className="block px-4 py-2 hover:bg-gray-100 transition rounded-md text-gray-700 no-underline"
-                        style={{
-                          textDecoration: "none",
-                          color: "green",
-                          fontWeight: "bold",
-                        }}
+                        style={{ color: "green", fontWeight: "bold" }}
                       >
                         Admin Dashboard
                       </Link>
                     </li>
                   )}
-                  {/* Logout Option */}
-
                   <li>
                     <button
                       onClick={logout}
@@ -258,7 +217,6 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="lg:hidden text-gray-800 focus:outline-none"
@@ -293,35 +251,63 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <nav className="absolute top-20 left-0 w-full bg-white shadow-md border-t border-gray-200 lg:hidden">
           <div className="flex flex-col px-6 py-4 space-y-3">
             {[
-              { path: "/", label: "Home", icon: <FaHome /> },
-              { path: "/about", label: "About", icon: <MdVoiceChat /> },
-              {
-                path: "/courses",
-                label: "Courses",
-                icon: <MdCastForEducation />,
-              },
-              { path: "/blog", label: "Blog", icon: <FaBlog /> },
-              { path: "/gallery", label: "Gallery", icon: <RiGalleryFill /> },
-              { path: "/contact", label: "Contact", icon: <FaPhoneVolume /> },
+              { path: "/", label: "Home" },
+              { path: "/about", label: "About" },
+              { path: "/courses", label: "Courses" },
+              { path: "/blog", label: "Blog" },
+              { path: "/gallery", label: "Gallery" },
+              { path: "/contact", label: "Contact" },
             ].map(({ path, label }) => (
               <Link
                 key={path}
                 to={path}
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center gap-3 text-lg text-gray-800 hover:text-blue-500 transition-all px-4 py-3 rounded-lg"
+                className="flex items-center gap-3 text-lg text-gray-800 hover:text-blue-500 transition-all px-4 py-3 rounded-lg no-underline"
                 style={{
-                  textDecoration: "none",
+                  textDecoration:'none'
                 }}
               >
                 {label}
               </Link>
             ))}
-            <div className="ml-6 flex items-center justify-center"></div>
+
+            {/* Mobile Auth Actions */}
+            {user ? (
+              <div className="px-2 mt-2">
+                {user?.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-green-600 font-semibold py-2"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left text-red-500 font-medium py-2"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className="px-2 mt-2">
+                <Link
+                  to="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-center bg-[#fb2c36] text-white font-semibold py-2 rounded-md shadow-md"
+                >
+                  Sign In
+                </Link>
+              </div>
+            )}
           </div>
         </nav>
       )}

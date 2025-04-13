@@ -8,7 +8,7 @@ import "./CourseCard.css";
 
 const CourseCard = ({ courses }) => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext); // Get the user from context
+  const { user } = useContext(AuthContext);
 
   const handleViewProgramClick = (courseId) => {
     if (user) {
