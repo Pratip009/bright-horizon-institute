@@ -4,8 +4,9 @@ import StatsSection from "../../components/about/StatsSection";
 import Testimonials from "../../components/about/Testimonials";
 import Banner from "../../components/Banner";
 import FAQ from "../../components/about/Faq";
+import TeamMembers from "../../components/about/TeamMembers";
 import bannerImg from "../../assets/images/ghibli1.png";
-
+import FoundersMessage from "../../components/about/FoundersMessage"
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,8 +82,11 @@ const About = () => {
           <Banner text="About Us" imageUrl={bannerImg} />
         </div>
         <ExpertSkills />
+
         <StatsSection />
+        <TeamMembers />
         <Testimonials />
+        <FoundersMessage/>
         <FAQ />
       </div>
     </div>

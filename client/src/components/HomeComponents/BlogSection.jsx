@@ -88,17 +88,10 @@ const BlogSection = () => {
         </p>
 
         <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-        Enhance Your Skills & Career,<br />Learn Something New, and{" "}
+          Enhance Your Skills & Career,
+          <br />
+          Learn Something New, and <br /> Grow Your Skills.
           <span className="mr-2"></span>
-          <div className="relative inline-flex">
-            <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-            <h1
-              className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
-              data-aos="zoom-in"
-            >
-              Grow Your Skills.
-            </h1>
-          </div>
         </h1>
 
         <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up">

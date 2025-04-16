@@ -40,11 +40,8 @@ export default function PopularCourses() {
       <span className="text-sm text-red-500 font-semibold">LEARN AT YOUR OWN PACE</span>
 
       <h1 className="text-black font-bold text-4xl sm:text-6xl lg:text-7xl">
-        Popular <span className="mr-2"></span>
-        <div className="relative inline-flex">
-          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80]"></span>
-          <span className="relative font-dmserif">Courses</span>
-        </div>
+        Popular Courses<span className="mr-2"></span>
+        
       </h1>
 
       <p className="mt-8 text-base text-black sm:text-xl">

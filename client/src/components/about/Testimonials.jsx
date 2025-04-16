@@ -121,14 +121,9 @@ const TestimonialSection = () => {
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              Our happy clients say
+              Our happy clients say about us
               <span className="mr-2"></span>
-              <div className="relative inline-flex">
-                <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-                <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-                  about us
-                </h1>
-              </div>
+              
             </h1>
           </div>
 

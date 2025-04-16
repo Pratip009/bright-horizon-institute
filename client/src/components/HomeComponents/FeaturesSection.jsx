@@ -54,11 +54,8 @@ export default function FeaturesSection() {
         data-aos="fade-up"
         data-aos-delay="200"
       >
-        Affordable Online Courses and Learning <span className="mr-2"></span>
-        <div className="relative inline-flex">
-          <span className="absolute inset-x-0 bottom-0 border-b-[15px] sm:border-b-[20px] lg:border-b-[20px] border-[#4ADE80] "></span>
-          <span className="relative font-dmserif">Opportunities</span>
-        </div>
+        Affordable Online Courses and Learning Opportunities
+        <span className="mr-2"></span>
       </h1>
 
       <p className="mt-8 text-base text-black sm:text-xl">

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
-import expertImg from "../../assets/images/bhi11.jpg"
+import expertImg from "../../assets/images/bhi11.jpg";
 const ExpertSkills = () => {
   const navigate = useNavigate();
 
@@ -37,14 +37,8 @@ const ExpertSkills = () => {
                 data-aos="fade-up"
                 data-aos-delay="400"
               >
-                Develop Your Skills, Learn Something New, and Grow Your
+                Develop Your Skills, Learn Something New, and Grow Your Skills.
                 <span className="mr-2"></span>
-                <div className="relative inline-flex">
-                  <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-                  <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-                    Skills.
-                  </h1>
-                </div>
               </h1>
 
               <p

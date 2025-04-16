@@ -1,28 +1,39 @@
 // src/components/Home.js
 
-import BlogSection from "../../components/HomeComponents/BlogSection";
-import BusinessInitiatives from "../../components/HomeComponents/BusinessInitiative";
-import CertificationBanner from "../../components/HomeComponents/CertificationBanner";
-// import CourseCard from "../../components/HomeComponents/CourseCard";
-import FeaturesSection from "../../components/HomeComponents/FeaturesSection";
-import FlexibleStudySection from "../../components/HomeComponents/FlexibleStudySection";
-import FloatingButtons from "../../components/HomeComponents/FloatingButtons";
+import { lazy, Suspense } from "react";
+import SpinnerLoader from "../../components/Loader";
 
-import HeroSection from "../../components/HomeComponents/HeroSection";
-import PopularCourses from "../../components/HomeComponents/PopularCourses";
+// Lazy loaded components
+const HeroSection = lazy(() => import("../../components/HomeComponents/HeroSection"));
+const FeaturesSection = lazy(() => import("../../components/HomeComponents/FeaturesSection"));
+const BlogSection = lazy(() => import("../../components/HomeComponents/BlogSection"));
+const BusinessInitiatives = lazy(() => import("../../components/HomeComponents/BusinessInitiative"));
+const PopularCourses = lazy(() => import("../../components/HomeComponents/PopularCourses"));
+const FlexibleStudySection = lazy(() => import("../../components/HomeComponents/FlexibleStudySection"));
+const CertificationBanner = lazy(() => import("../../components/HomeComponents/CertificationBanner"));
+const FloatingButtons = lazy(() => import("../../components/HomeComponents/FloatingButtons"));
+// const CourseCard = lazy(() => import("../../components/HomeComponents/CourseCard"));
 
 const Home = () => {
   return (
-    <div className="Container-fluid space-y-4 overflow-hidden">
-      <HeroSection />
-      <FeaturesSection />
-      <BlogSection />
-      <BusinessInitiatives />
-      {/* <CourseCard/> */}
-      <PopularCourses />
-      <FlexibleStudySection />
-      <CertificationBanner />
-      <FloatingButtons />
+    <div className="container-fluid space-y-4 overflow-hidden">
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex justify-center items-center">
+            <SpinnerLoader size={45}/>
+          </div>
+        }
+      >
+        <HeroSection />
+        <FeaturesSection />
+        <BlogSection />
+        <BusinessInitiatives />
+        {/* <CourseCard /> */}
+        <PopularCourses />
+        <FlexibleStudySection />
+        <CertificationBanner />
+        <FloatingButtons />
+      </Suspense>
     </div>
   );
 };

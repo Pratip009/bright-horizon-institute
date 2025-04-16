@@ -1,25 +1,31 @@
+// src/components/Loader.js
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const SpinnerLoader = ({ size = 48, color = 'text-blue-600' }) => {
-  const spinnerSize = {
-    width: `${size}px`,
-    height: `${size}px`,
-  };
-
+const SpinnerLoader = ({
+  src = "/loaderanimation.webm",
+  width = 200,
+  height = 200,
+}) => {
   return (
-    <div className="flex items-center justify-center">
-      <div
-        className={`animate-spin rounded-full border-4 border-t-transparent ${color}`}
-        style={spinnerSize}
-      ></div>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      <video
+        src={src}
+        width={width}
+        height={height}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
     </div>
   );
 };
 
 SpinnerLoader.propTypes = {
-  size: PropTypes.number,
-  color: PropTypes.string,
+  src: PropTypes.string,
+  width: PropTypes.number,
+  height: PropTypes.number,
 };
 
 export default SpinnerLoader;

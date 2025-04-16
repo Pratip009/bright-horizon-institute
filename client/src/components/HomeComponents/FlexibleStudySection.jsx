@@ -116,14 +116,9 @@ const FlexibleStudySection = () => {
           </p>
 
           <h1 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl" data-aos="fade-up" data-aos-delay="400">
-            Flexible Study at Your Own Pace, According to Your Own
+            Flexible Study at Your Own Pace, According to Your Own Needs
             <span className="mr-2"></span>
-            <div className="relative inline-flex">
-              <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-              <h1 className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl">
-                Needs
-              </h1>
-            </div>
+            
           </h1>
           <p className="mt-8 text-base text-black sm:text-xl" data-aos="fade-up" data-aos-delay="600">
             Bright Horizon Institute was founded in 2010 in Newark, NJ. It is a vocational school that offers a variety of courses...

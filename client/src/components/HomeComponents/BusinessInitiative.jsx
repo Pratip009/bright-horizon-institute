@@ -28,17 +28,7 @@ const BusinessInitiative = () => {
                 className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
                 data-aos="fade-right"
               >
-                Collaborate remotely, with
-                <div className="relative inline-flex">
-                  <span className="absolute inset-x-0 bottom-0 border-b-[30px] border-[#4ADE80]"></span>
-                  <h1
-                    className="relative text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
-                    data-aos="zoom-in"
-                    data-aos-delay="200"
-                  >
-                    Bright Horizon Institute.
-                  </h1>
-                </div>
+                Collaborate remotely, with <br /> Bright Horizon Institute.
               </h1>
 
               <p
