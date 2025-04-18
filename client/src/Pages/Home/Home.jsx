@@ -12,8 +12,7 @@ const PopularCourses = lazy(() => import("../../components/HomeComponents/Popula
 const FlexibleStudySection = lazy(() => import("../../components/HomeComponents/FlexibleStudySection"));
 const CertificationBanner = lazy(() => import("../../components/HomeComponents/CertificationBanner"));
 const FloatingButtons = lazy(() => import("../../components/HomeComponents/FloatingButtons"));
-// const CourseCard = lazy(() => import("../../components/HomeComponents/CourseCard"));
-
+const MissionVission = lazy(() => import("../../components/HomeComponents/MissionVission"));
 const Home = () => {
   return (
     <div className="container-fluid space-y-4 overflow-hidden">
@@ -31,6 +30,7 @@ const Home = () => {
         {/* <CourseCard /> */}
         <PopularCourses />
         <FlexibleStudySection />
+        <MissionVission/>
         <CertificationBanner />
         <FloatingButtons />
       </Suspense>
