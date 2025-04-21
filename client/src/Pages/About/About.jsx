@@ -1,12 +1,13 @@
-import { useEffect } from "react";
-import ExpertSkills from "../../components/about/ExpertSkills";
-import StatsSection from "../../components/about/StatsSection";
-import Testimonials from "../../components/about/Testimonials";
+import { lazy, useEffect, Suspense } from "react";
+const ExpertSkills = lazy(() => import("../../components/about/ExpertSkills"));
+const StatsSection = lazy(() => import("../../components/about/StatsSection"));
+const Testimonials = lazy(() => import("../../components/about/Testimonials"));
+const FAQ = lazy(() => import("../../components/about/Faq"));
 import Banner from "../../components/Banner";
-import FAQ from "../../components/about/Faq";
-import TeamMembers from "../../components/about/TeamMembers";
+// import TeamMembers from "../../components/about/TeamMembers";
 import bannerImg from "../../assets/images/ghibli1.png";
-import FoundersMessage from "../../components/about/FoundersMessage"
+import SpinnerLoader from "../../components/Loader";
+// import FoundersMessage from "../../components/about/FoundersMessage"
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,13 +82,48 @@ const About = () => {
         <div style={{ marginTop: "2rem" }}>
           <Banner text="About Us" imageUrl={bannerImg} />
         </div>
-        <ExpertSkills />
+        <Suspense
+          fallback={
+            <div>
+              <SpinnerLoader />
+            </div>
+          }
+        >
+          <ExpertSkills />
+        </Suspense>
 
-        <StatsSection />
-        <TeamMembers />
-        <Testimonials />
-        <FoundersMessage/>
-        <FAQ />
+        <Suspense
+          fallback={
+            <div>
+              <SpinnerLoader />
+            </div>
+          }
+        >
+          <StatsSection />
+        </Suspense>
+
+        {/* <TeamMembers /> */}
+        <Suspense
+          fallback={
+            <div>
+              <SpinnerLoader />
+            </div>
+          }
+        >
+          <Testimonials />
+        </Suspense>
+
+        {/* <FoundersMessage/> */}
+        <Suspense
+          fallback={
+            <div>
+              {" "}
+              <SpinnerLoader />
+            </div>
+          }
+        >
+          <FAQ />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,14 +1,31 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import compression from "vite-plugin-compression";
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    compression({
+      algorithm: "gzip",
+      ext: ".gz",
+    }),
   ],
   build: {
-    outDir: 'dist', // Correct placement of build config
+    outDir: "dist",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          icons: ['react-icons/fa', 'react-icons/sl'],
+          motion: ['framer-motion'],
+          quill: ['react-quill'],
+          clerk: ['@clerk/clerk-react'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 500, // optional: suppress warnings if needed
   },
 });
