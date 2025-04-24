@@ -33,9 +33,9 @@ const Footer = () => {
           <div className="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
             <img className="w-auto h-14" src={logo} alt="Logo" />
             <p className="text-base leading-relaxed text-gray-600 mt-7">
-              Bright Horizon Institute was founded in 2010 in Newark, NJ. It is
-              a vocational school that offers a variety of courses for students
-              with High School Diplomas or an equivalent.
+              Online or in person, Bright Horizon Institute helps you gain real
+              skills for real careers. Learn fast, train smart, and step into
+              the workforce with confidence. We’re here for you!
             </p>
             <ul className="flex items-center space-x-3 mt-9">
               {socialLinks.map((social, index) => (
@@ -81,8 +81,8 @@ const Footer = () => {
             <div className="mt-6 text-base text-gray-600">
               <p>591 Summit Ave, Suite No. 400</p>
               <p>Jersey City, New Jersey, NJ 07306</p>
-              <p className="mt-2">📞 +1 (551) 804-3663</p>
-              <p className="mt-1">✉️ training@brighthorizoninstitute.com</p>
+              <p className="mt-2">📞 201-377-1594</p>
+              <p className="mt-1">✉️ admin@bhilearning.com</p>
             </div>
           </div>
         </div>

@@ -29,28 +29,44 @@ const ExpertSkills = () => {
                 className="text-sm text-red-500 font-semibold"
                 data-aos="fade-up"
               >
-                EXPERT LEARNING
+                ABOUT US
               </span>
 
               <h1
-                className="text-4xl font-bold text-black sm:text-6xl lg:text-7xl"
+                className="text-4xl font-bold text-black sm:text-lg lg:text-7xl"
                 data-aos="fade-up"
                 data-aos-delay="400"
               >
-                Develop Your Skills, Learn Something New, and Grow Your Skills.
+                Bright Horizon Institute – Your Career Starts Here
                 <span className="mr-2"></span>
               </h1>
 
               <p
-                className="mt-8 text-base text-black sm:text-xl"
+                className="mt-8 text-base text-black sm:text-md"
                 data-aos="fade-up"
                 data-aos-delay="600"
               >
-                Bright Horizon Institute was founded in 2010 in Newark, NJ. It
-                is a vocational school that offers a variety of courses for
-                students with High School Diplomas or an equivalent. Our mission
-                is to provide students with high-quality training programs and
-                prepare them for a competitive job market.
+                Located in the heart of Jersey City, Bright Horizon Institute is
+                more than just a vocational school—we’re a committed partner in
+                your career development. Since 2010, we’ve empowered students to
+                acquire practical skills, earn National industry-recognized
+                certifications, and build the foundation for successful,
+                long-lasting careers. Our goal is not only to equip you with the
+                knowledge you need but to actively connect you to the workforce,
+                ensuring you&apos;re ready to thrive in your chosen field.
+                Whether you study online or in person, our flexible, hands-on
+                programs are designed to fit your life and propel your career
+                forward. We offer training in high-demand fields like
+                healthcare, business, technology, and more—always focused on the
+                skills employers need and the education students deserve. What
+                sets us apart? We’re with you every step of the way, providing
+                the guidance and support you need from day one to job placement
+                and beyond. Through our partnerships with trusted organizations
+                and local employers, we ensure you have the resources and
+                connections to find your place in the workforce. At Bright
+                Horizon, you’re more than just a student—you’re someone we’re
+                invested in. We provide the tools, support, and opportunities to
+                help you unlock your full potential.
               </p>
 
               <p
@@ -58,8 +74,7 @@ const ExpertSkills = () => {
                 data-aos="fade-up"
                 data-aos-delay="800"
               >
-                Grow your knowledge and your opportunities with training and
-                tools.
+                Your future is within reach. Let’s build it—together.
               </p>
 
               <button

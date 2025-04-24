@@ -69,18 +69,16 @@ const Contact = () => {
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaMapMarkerAlt className="text-[#4ADE80] text-2xl animate-bounce" />
             <span className="text-gray-700">
-              591 Summit avenue jersey city NJ 07306
+              591 Summit Avenue Jersey City NJ 07306
             </span>
           </div>
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaEnvelope className="text-[#4ADE80] text-2xl animate-bounce" />
-            <span className="text-gray-700">
-              training@brighthorizoninstitute.com
-            </span>
+            <span className="text-gray-700">admin@bhilearning.com</span>
           </div>
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaPhone className="text-[#4ADE80] text-2xl animate-bounce" />
-            <span className="text-gray-700">+1 (551) 804-3663</span>
+            <span className="text-gray-700">201-377-1594</span>
           </div>
           {/* Embedded Map */}
           <div
