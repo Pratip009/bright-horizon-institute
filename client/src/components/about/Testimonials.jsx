@@ -10,21 +10,21 @@ const testimonials = [
     name: "Paloma E",
     role: "Freelance React Developer",
     image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-1.png",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    feedback: "Bright Horizon Institute transformed my development skills. Their hands-on React training was exactly what I needed to land new clients with confidence!",
   },
   {
     id: 2,
     name: "Jacob Jones",
     role: "Digital Marketer",
     image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-2.png",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    feedback: "The courses at Bright Horizon are practical, engaging, and industry-relevant. I saw a real improvement in my digital marketing strategies after enrolling.",
   },
   {
     id: 3,
     name: "Jenny Wilson",
     role: "UI/UX Designer",
     image: "https://cdn.rareblocks.xyz/collection/clarity/images/testimonial/4/avatar-male-2.png",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    feedback: "Their UI/UX course helped me sharpen my design thinking and portfolio. I highly recommend Bright Horizon to anyone serious about design.",
   },
 ];
 
@@ -36,39 +36,14 @@ const TestimonialCard = ({ testimonial }) => {
       data-aos="zoom-in"
       data-aos-delay={testimonial.id * 150}
     >
-      {/* Gradient Overlay on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
       {/* Glassmorphism Background Effect */}
       <div className="absolute inset-0 bg-white/70 backdrop-blur-sm rounded-3xl"></div>
 
       <div className="relative flex flex-col p-6 lg:p-8">
-        <div className="relative overflow-hidden rounded-2xl mb-6 border border-gray-100/50 shadow-sm group-hover:shadow-md transition-all duration-300">
-          <video
-            controls
-            preload="metadata"
-            className="w-full h-auto"
-            style={{ aspectRatio: "16/9", maxWidth: "100%" }}
-            onError={(e) => console.error("Video failed to load:", testimonial.videoUrl, e)}
-          >
-            <source src={testimonial.videoUrl} type="video/mp4" />
-            <img
-              src={testimonial.image}
-              alt="Video unavailable"
-              className="w-full h-auto object-cover"
-              style={{ aspectRatio: "16/9" }}
-            />
-          </video>
-          {/* Subtle Play Icon Overlay */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-30 transition-opacity duration-300 pointer-events-none">
-            <svg
-              className="w-12 h-12 text-white drop-shadow-md"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
+        <div className="mb-6">
+          <p className="text-base text-gray-700 italic leading-relaxed">
+            “{testimonial.feedback}”
+          </p>
         </div>
 
         <div className="flex items-center gap-4 z-10">
@@ -93,7 +68,7 @@ TestimonialCard.propTypes = {
     name: PropTypes.string.isRequired,
     role: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
-    videoUrl: PropTypes.string.isRequired,
+    feedback: PropTypes.string.isRequired,
   }).isRequired,
 };
 
@@ -111,7 +86,6 @@ const TestimonialSection = () => {
     <section className="py-12 bg-white sm:py-16 lg:py-20">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
-          {/* Original Heading Section - Unchanged */}
           <div className="text-center">
             <p className="text-base text-black sm:text-xl">
               People have said how good Bright Horizon Institute
@@ -122,8 +96,6 @@ const TestimonialSection = () => {
               data-aos-delay="400"
             >
               Our happy clients say about us
-              <span className="mr-2"></span>
-              
             </h1>
           </div>
 

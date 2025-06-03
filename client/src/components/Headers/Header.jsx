@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../assets/slider/bhilogo.svg";
+import logo from "../../assets/slider/newlogo.png";
 import { FaSearch } from "react-icons/fa";
 
 import AuthContext from "../../context/AuthContext";

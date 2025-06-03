@@ -5,7 +5,7 @@ import {
   FaLinkedin,
   FaGithub,
 } from "react-icons/fa";
-import logo from "../../assets/slider/bhilogo.svg";
+import logo from "../../assets/slider/newlogo.png";
 const Footer = () => {
   const socialLinks = [
     { name: "Facebook", icon: FaFacebookF, link: "#" },
