@@ -64,8 +64,8 @@ const PaymentAccept = () => {
               Please contact us at the details below to proceed with enrollment:
             </p>
             <p className="text-lg text-black font-semibold">
-              📞 Phone: +1 (551) 804-3663 <br />
-              📧 training@brighthorizoninstitute.com
+              📞 Phone: 2013771594 <br />
+              📧 Admin@bhilearning.com
             </p>
             <button
               onClick={() => setShowModal(false)}
