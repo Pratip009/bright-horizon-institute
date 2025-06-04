@@ -69,7 +69,7 @@ const Contact = () => {
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
             <FaMapMarkerAlt className="text-[#4ADE80] text-2xl animate-bounce" />
             <span className="text-gray-700">
-              591 Summit Avenue Jersey City NJ 07306
+              591 Summit Ave, Suite No. 400 ,Jersey City, New Jersey, NJ 07306
             </span>
           </div>
           <div className="flex items-center space-x-4 bg-gray-100 p-4 rounded-2xl shadow-md">
@@ -88,10 +88,14 @@ const Contact = () => {
             <iframe
               title="map"
               className="w-full h-64"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6046.415905846902!2d-74.06477604768554!3d40.73544948831876!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25730cc0c918f%3A0xfa23aa8580a65be0!2s591%20Summit%20Ave%2C%20Jersey%20City%2C%20NJ%2007306%2C%20USA!5e0!3m2!1sen!2sin!4v1738675790545!5m2!1sen!2sin"
-              allowFullScreen=""
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.2404959499418!2d-74.0622150245004!3d40.73473333622442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25730cc0c700d%3A0x5d67811a0fa442ef!2sBright%20Horizon%20Institute!5e0!3m2!1sen!2sin!4v1749047877573!5m2!1sen!2sin"
+              width="600"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen
               loading="lazy"
-            ></iframe>
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
 

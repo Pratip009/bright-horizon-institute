@@ -1,6 +1,6 @@
 require("dotenv").config();
 const compression = require("compression");
-
+const path = require("path");
 const express = require("express");
 const paypal = require("paypal-rest-sdk");
 const cors = require("cors");
@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
 app.use(compression());
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000"
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 // MongoDB connection with error handling
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -132,6 +132,11 @@ app.get("/success", async (req, res) => {
 // Route to handle failed payment
 app.get("/failed", (req, res) => {
   return res.redirect("http://localhost:5173/failed");
+});
+app.use(express.static(path.join(__dirname, "..", "client", "build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
 });
 
 // Start the server
