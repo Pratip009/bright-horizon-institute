@@ -1,8 +1,8 @@
 import { FaWhatsapp, FaEnvelope, FaFacebook, FaInstagram } from "react-icons/fa";
 
 const FloatingButtons = () => {
-  const phoneNumber = "15518043663"; // Ensure correct format
-  const emailAddress = "training@brighthorizoninstitute.com";
+  const phoneNumber = "2013771594"; // Ensure correct format
+  const emailAddress = "Admin@bhilearning.com";
   const facebookURL = "https://www.facebook.com/yourpage"; // Replace with actual Facebook URL
   const instagramURL = "https://www.instagram.com/yourprofile"; // Replace with actual Instagram URL
 
