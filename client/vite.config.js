@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import compression from "vite-plugin-compression";
 
 export default defineConfig({
+  base: "/", // crucial for SPA routing to work correctly after deployment
   plugins: [
     react(),
     tailwindcss(),
@@ -17,15 +18,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          icons: ['react-icons/fa', 'react-icons/sl'],
-          motion: ['framer-motion'],
-          quill: ['react-quill'],
-          clerk: ['@clerk/clerk-react'],
+          react: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          icons: ["react-icons/fa", "react-icons/sl"],
+          motion: ["framer-motion"],
+          quill: ["react-quill"],
+          clerk: ["@clerk/clerk-react"],
         },
       },
     },
-    chunkSizeWarningLimit: 500, // optional: suppress warnings if needed
+    chunkSizeWarningLimit: 500,
   },
 });

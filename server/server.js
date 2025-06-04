@@ -133,10 +133,11 @@ app.get("/success", async (req, res) => {
 app.get("/failed", (req, res) => {
   return res.redirect("http://localhost:5173/failed");
 });
-app.use(express.static(path.join(__dirname, "..", "client", "build")));
+app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 
+// Catch-all for client-side routing
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "build", "index.html"));
+  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 });
 
 // Start the server
