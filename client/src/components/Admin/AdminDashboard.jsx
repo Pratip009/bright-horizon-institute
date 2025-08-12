@@ -4,6 +4,7 @@ import Users from "./Users";
 import AddCourse from "./AddCourse";
 import AddBlog from "./AddBlog";
 import AddGalleryImage from "./AddGalleryImage";
+import AddQuickProgram from "./AddQuickProgram";
 
 
 const AdminDashboard = () => {
@@ -17,6 +18,7 @@ const AdminDashboard = () => {
         {active === "Add Courses" && <AddCourse />}
         {active === "Gallery" && <AddGalleryImage />}
         {active === "Blog" && <AddBlog />}
+        {active === "Quick Programs" && <AddQuickProgram />}
      
         {active === "Dashboard" && <h1>Welcome to Admin Panel</h1>}
       </div>

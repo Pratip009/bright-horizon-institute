@@ -8,9 +8,11 @@ const Courses = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   // Fetch courses from backend API on component mount
   useEffect(() => {
     const fetchCourses = async () => {
+     
       try {
         const response = await fetch(`${API_URL}/courses`);
         if (!response.ok) {

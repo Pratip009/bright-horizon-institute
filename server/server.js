@@ -12,11 +12,15 @@ const { auth } = require("./middleware/authMiddleware");
 const courseRoutes = require("./routes/courseRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 const galleryRoutes = require("./routes/galleryRoutes");
+const quickProgramsRoute = require("./routes/quickProgramsRoute"); // Fixed file name
+
 const app = express();
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing for POST requests
 app.use(compression());
+
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
 // MongoDB connection with error handling
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -29,17 +33,21 @@ mongoose
 mongoose.connection.on("error", (err) => {
   console.error("MongoDB Error:", err);
 });
-
+app.get("/api/test", (req, res) => {
+  console.log("API test route hit");
+  res.json({ message: "API is working" });
+});
 // Use routes
 app.use("/auth", authRoutes);
 app.use("/users", (req, res, next) => {
   next();
 });
-app.use("/users", auth(["admin"]), userRoutes);
-app.use("/courses", courseRoutes);
-app.use("/blogs", blogRoutes);
-app.use("/gallery", galleryRoutes);
-
+app.use("/api/users", auth(["admin"]), userRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/gallery", galleryRoutes);
+app.use("/api/quick-programs", quickProgramsRoute); // Mount route with debug logging
+app.get("/api/test", (req, res) => res.json({ msg: "API is working" }));
 // PayPal configuration
 paypal.configure({
   mode: "sandbox", // Change to 'live' for production
@@ -50,6 +58,7 @@ paypal.configure({
 app.post("/api/blogs", (req, res) => {
   console.log("Incoming request body:", req.body);
 });
+
 // Route to initiate PayPal payment
 app.post("/payment", auth(["user", "admin"]), async (req, res) => {
   try {
@@ -133,6 +142,7 @@ app.get("/success", async (req, res) => {
 app.get("/failed", (req, res) => {
   return res.redirect("http://localhost:5173/failed");
 });
+
 app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 
 // Catch-all for client-side routing

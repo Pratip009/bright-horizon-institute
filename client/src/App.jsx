@@ -1,9 +1,11 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Headers/Header";
 import PaymentOptions from "./Pages/Payment/PaymentOption";
 import Footer from "./components/Footer/Footer";
 import Home from "./Pages/Home/Home";
 import Courses from "./Pages/Courses/Courses";
+import QuickPrograms from "./Pages/Courses/QuickPrograms"
+import QuickProgramsDetails from "./Pages/Courses/QuickProgramsDetails"
 import CourseDetail from "./Pages/Courses/CourseDetail";
 import About from "./Pages/About/About";
 import Contact from "./Pages/Contact/Contact";
@@ -22,8 +24,11 @@ import Login from "./Pages/Auth/Login";
 import Register from "./Pages/Auth/Register";
 import AddCourse from "./components/Admin/AddCourse";
 import AddBlog from "./components/Admin/AddBlog";
+import AddQuickProgram from "./components/Admin/AddQuickProgram"
 import AddGalleryImage from "./components/Admin/AddGalleryImage";
 import Profile from "./Pages/Profile/Profile";
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
 
 const App = () => {
   useEffect(() => {
@@ -43,6 +48,8 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetail />} />
+             <Route path="/quick-programs" element={<QuickPrograms />} />
+             <Route path="/quick-programs/:id" element={<QuickProgramsDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
@@ -53,6 +60,12 @@ const App = () => {
             <Route path="/success" element={<PaymentSuccess />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditions />}
+            />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
             <Route
               path="/profile"
               element={
@@ -77,6 +90,15 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/add-quick-program"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddQuickProgram />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/add-images"
               element={

@@ -6,6 +6,7 @@ import brain from "../../assets/slider/brain.png";
 import earth from "../../assets/slider/earth.png";
 import laptop from "../../assets/slider/laptop.png";
 import verify from "../../assets/slider/verify.png";
+import { Link } from "react-router-dom";
 
 export default function FeaturesSection() {
   useEffect(() => {
@@ -103,14 +104,14 @@ export default function FeaturesSection() {
             </p>
 
             {/* Button */}
-            <a
-              href="/courses"
+            <Link
+              to="/courses"
               className="bg-[#4ADE80] text-white font-medium px-6 py-2 rounded-full transition-all duration-300 hover:bg-[#57ad58] hover:scale-105 shadow-md inline-block mt-auto"
               style={{ textDecoration: "none" }}
               data-aos="fade-up"
             >
               Start Now!
-            </a>
+            </Link>
           </div>
         ))}
       </div>

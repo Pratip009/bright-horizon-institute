@@ -6,6 +6,8 @@ import {
   FaGithub,
 } from "react-icons/fa";
 import logo from "../../assets/slider/newlogo.png";
+
+
 const Footer = () => {
   const socialLinks = [
     { name: "Facebook", icon: FaFacebookF, link: "#" },
@@ -18,11 +20,21 @@ const Footer = () => {
   const sections = [
     {
       title: "Important Pages",
-      links: ["About", "Features", "Works", "Career"],
+      links: [
+        { name: "About", url: "#" },
+        { name: "Features", url: "#" },
+        { name: "Privacy & Policy", url: "/privacy-policy.html" },
+        { name: "Terms & Conditions", url: "/terms-and-conditions.html" },
+      ],
     },
     {
       title: "Courses Categories",
-      links: ["Healthcare", "Programming", "Networking", "Management"],
+      links: [
+        { name: "Healthcare", url: "#" },
+        { name: "Programming", url: "#" },
+        { name: "Networking", url: "#" },
+        { name: "Management", url: "#" },
+      ],
     },
   ];
 
@@ -61,11 +73,11 @@ const Footer = () => {
                 {section.links.map((link, i) => (
                   <li key={i}>
                     <a
-                      href="#"
+                      href={link.url}
                       className="flex text-base text-black transition-all duration-200 hover:text-blue-600 focus:text-blue-600"
                       style={{ textDecoration: "none" }}
                     >
-                      {link}
+                      {link.name}
                     </a>
                   </li>
                 ))}

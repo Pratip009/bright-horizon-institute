@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../../context/useAuth";
 import { motion } from "framer-motion";
@@ -108,9 +108,9 @@ const Login = () => {
         {/* Sign Up Link */}
         <p className="mt-4 text-center text-gray-600">
           Don&apos;t have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline">
+          <Link to="/register" className="text-blue-500 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

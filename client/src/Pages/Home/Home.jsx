@@ -6,6 +6,7 @@ import SpinnerLoader from "../../components/Loader";
 // Lazy loaded components
 const HeroSection = lazy(() => import("../../components/HomeComponents/HeroSection"));
 const FeaturesSection = lazy(() => import("../../components/HomeComponents/FeaturesSection"));
+const BhiWorkshop = lazy(() => import("../../components/HomeComponents/BhiWorkshop.jsx"));
 const BlogSection = lazy(() => import("../../components/HomeComponents/BlogSection"));
 const BusinessInitiatives = lazy(() => import("../../components/HomeComponents/BusinessInitiative"));
 const PopularCourses = lazy(() => import("../../components/HomeComponents/PopularCourses"));
@@ -24,6 +25,7 @@ const Home = () => {
         }
       >
         <HeroSection />
+        <BhiWorkshop/>
         <FeaturesSection />
         <BlogSection />
         <BusinessInitiatives />

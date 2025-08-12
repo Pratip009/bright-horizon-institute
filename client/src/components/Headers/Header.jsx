@@ -149,6 +149,7 @@ const Header = () => {
             { path: "/", label: "Home" },
             { path: "/about", label: "About" },
             { path: "/courses", label: "Courses" },
+            { path: "/quick-programs", label: "Quick Programs" },
             { path: "/blog", label: "Blog" },
             { path: "/gallery", label: "Gallery" },
             { path: "/contact", label: "Contact" },
@@ -258,6 +259,7 @@ const Header = () => {
               { path: "/", label: "Home" },
               { path: "/about", label: "About" },
               { path: "/courses", label: "Courses" },
+              { path: "/quick-programs", label: "Quick Programs" },
               { path: "/blog", label: "Blog" },
               { path: "/gallery", label: "Gallery" },
               { path: "/contact", label: "Contact" },
@@ -268,7 +270,7 @@ const Header = () => {
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center gap-3 text-lg text-gray-800 hover:text-blue-500 transition-all px-4 py-3 rounded-lg no-underline"
                 style={{
-                  textDecoration:'none'
+                  textDecoration: "none",
                 }}
               >
                 {label}
