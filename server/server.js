@@ -12,7 +12,6 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://brighthorizoninstitute.com",
-  "https://bright-horizon-institute-kp03ik17k-pratip009s-projects.vercel.app"
 ];
 
 app.use(cors({
