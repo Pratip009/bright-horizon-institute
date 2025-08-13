@@ -1,48 +1,52 @@
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PaymentSuccess = () => {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || "https://bright-horizon-institute-2.onrender.com";
 
   useEffect(() => {
-    const verifyPayment = async () => {
-      const paymentId = searchParams.get("token");
-      if (!paymentId) {
-        alert("Missing payment ID");
-        return navigate("/quick-programs");
-      }
+    const query = new URLSearchParams(location.search);
+    const token = query.get("token");
+    const payerID = query.get("PayerID");
+    const orderID = query.get("orderID"); // For JavaScript SDK compatibility
 
-      try {
-        const res = await fetch(`${API_URL}/api/payment/verify`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ paymentId }),
+    if (token && payerID) {
+      // Express Checkout: Verify payment on backend
+      axios
+        .post("/api/complete-payment", { token, payerID })
+        .then((response) => {
+          console.log("Payment verified:", response.data);
+        })
+        .catch((err) => {
+          console.error("Payment verification failed:", err);
+          navigate("/payment-cancel");
         });
+    } else if (orderID) {
+      // JavaScript SDK: Verify orderID on backend
+      axios
+        .post("/api/verify-payment", { orderID })
+        .then((response) => {
+          console.log("Order verified:", response.data);
+        })
+        .catch((err) => {
+          console.error("Order verification failed:", err);
+          navigate("/payment-cancel");
+        });
+    } else {
+      navigate("/");
+    }
+  }, [location, navigate]);
 
-        const data = await res.json();
-        if (res.ok) {
-          alert("Payment successful!");
-          navigate("/my-courses");
-        } else {
-          alert(data.message || "Payment verification failed");
-          navigate("/quick-programs");
-        }
-      } catch (err) {
-        console.error("Verification error:", err);
-        alert("Failed to verify payment");
-        navigate("/quick-programs");
-      }
-    };
-
-    verifyPayment();
-  }, [searchParams, navigate]);
-
-  return <div>Processing payment...</div>;
+  return (
+    <div className="text-center py-12">
+      <h2 className="text-3xl font-bold text-gray-900">Payment Successful</h2>
+      <p className="text-lg text-gray-700 mt-4">
+        Thank you for your payment! Your enrollment is being processed.
+      </p>
+    </div>
+  );
 };
 
 export default PaymentSuccess;

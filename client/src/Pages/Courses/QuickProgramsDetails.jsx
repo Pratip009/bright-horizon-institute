@@ -48,74 +48,78 @@ const QuickProgramsDetails = () => {
     fetchProgram();
   }, [id, API_URL]);
 
- const handlePayment = async () => {
-  const token = localStorage.getItem("token");
-  console.log("Token sent to backend:", token);
-  if (!token) {
-    setErrorMessage("Please log in to proceed with payment");
-    return navigate("/login");
-  }
+  const handlePayment = async () => {
+    const token = localStorage.getItem("token");
+    console.log("Token sent to backend:", token);
+    if (!token) {
+      setErrorMessage("Please log in to proceed with payment");
+      return navigate("/login");
+    }
 
-  let userId;
-  try {
-    const decoded = jwt_decode(token);
-    userId = decoded.id || decoded._id;
-    console.log("Decoded token:", decoded);
-  } catch (err) {
-    console.error("Invalid token", err);
-    setErrorMessage("Session expired. Please log in again.");
-    localStorage.removeItem("token");
-    setPaymentLoading(false);
-    return navigate("/login");
-  }
+    let userId;
+    try {
+      const decoded = jwt_decode(token);
+      userId = decoded.id || decoded._id;
+      console.log("Decoded token:", decoded);
+    } catch (err) {
+      console.error("Invalid token", err);
+      setErrorMessage("Session expired or invalid. Please log in again.");
+      localStorage.removeItem("token");
+      setPaymentLoading(false);
+      return navigate("/login");
+    }
 
-  if (!program.price || isNaN(program.price)) {
-    setErrorMessage("Invalid course price");
-    setPaymentLoading(false);
-    return;
-  }
+    if (!program.price || isNaN(program.price)) {
+      setErrorMessage("Invalid course price");
+      setPaymentLoading(false);
+      return;
+    }
 
-  setErrorMessage(null);
-  setPaymentLoading(true);
+    setErrorMessage(null);
+    setPaymentLoading(true);
 
-  try {
-    const res = await fetch(`${API_URL}/api/payment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        amount: program.price,
-        userId,
-        courseId: program._id,
-      }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          amount: program.price,
+          userId,
+          courseId: program._id,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      console.error("Backend error:", data);
-      if (data.message === "Token expired, please login again") {
-        setErrorMessage("Session expired. Please log in again.");
-        localStorage.removeItem("token");
-        return navigate("/login");
+      if (!res.ok) {
+        console.error("Backend error:", data);
+        setErrorMessage(
+          data.message || "Payment request failed. Please try again."
+        );
+        if (data.message.includes("Token")) {
+          localStorage.removeItem("token");
+          return navigate("/login");
+        }
+        throw new Error(data.message || "Payment request failed");
       }
-      throw new Error(data.message || "Payment request failed");
-    }
 
-    if (data.approval_url) {
-      window.location.href = data.approval_url;
-    } else {
-      throw new Error("PayPal approval URL missing from response");
+      if (data.approval_url) {
+        window.location.href = data.approval_url;
+      } else {
+        throw new Error("PayPal approval URL missing from response");
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      setErrorMessage(
+        err.message || "Failed to initiate payment. Please try again."
+      );
+    } finally {
+      setPaymentLoading(false);
     }
-  } catch (err) {
-    console.error("Payment error:", err);
-    setErrorMessage(err.message || "Failed to initiate payment. Please try again.");
-  } finally {
-    setPaymentLoading(false);
-  }
-};
+  };
   const handleEnrollClick = () => {
     if (!isSignedIn) {
       navigate("/login");

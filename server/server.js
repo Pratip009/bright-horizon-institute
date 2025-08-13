@@ -15,6 +15,7 @@ const allowedOrigins = [
   "https://brighthorizoninstitute.com",
   "https://www.brighthorizoninstitute.com",
   "https://bright-horizon-institute-2.onrender.com",
+  "https://www.sandbox.paypal.com"
 ];
 
 app.use(

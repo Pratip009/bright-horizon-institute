@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import PaymentAccept from "./Pages/Payment/PaymentAccept";
 import PaymentSuccess from "./Pages/Payment/PaymentSuccess";
+import PaymentCancel from "./Pages/Payment/PaymentCancelled"
 import Blog from "./Pages/Blog/Blog";
 import BlogDetails from "./Pages/Blog/BlogDetails";
 import Gallery from "./Pages/Gallery/Gallery";
@@ -57,9 +58,11 @@ const App = () => {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/payment/:id" element={<PaymentAccept />} />
             <Route path="/payment-options" element={<PaymentOptions />} />
-            <Route path="/success" element={<PaymentSuccess />} />
+          
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route
               path="/terms-and-conditions"
               element={<TermsAndConditions />}

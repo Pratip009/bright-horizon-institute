@@ -6,11 +6,13 @@ const {
   verifyPayment,
   cancelPayment,
   getAllPayments,
+  paymentSuccess,
 } = require("../controllers/purchaseController");
 
 router.post("/", auth(), initiatePayment);
 router.post("/verify", auth(), verifyPayment);
 router.post("/cancel/:paymentId", auth(), cancelPayment);
 router.get("/", auth(["admin"]), getAllPayments);
+router.get("/payment-success", paymentSuccess);
 
 module.exports = router;
