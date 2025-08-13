@@ -1,25 +1,25 @@
+// backend/routes/paymentRoutes.js
 const express = require("express");
 const paypal = require("@paypal/checkout-server-sdk");
 const router = express.Router();
 
-// PayPal Client Factory
+// ===== PayPal Client =====
 function paypalClient() {
   if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
     throw new Error("Missing PayPal environment variables");
   }
 
-  let environment = new paypal.core.SandboxEnvironment(
+  const environment = new paypal.core.SandboxEnvironment(
     process.env.PAYPAL_CLIENT_ID,
     process.env.PAYPAL_CLIENT_SECRET
   );
   return new paypal.core.PayPalHttpClient(environment);
 }
 
-// POST /api/payment/create — create PayPal order
+// ===== Create PayPal Order =====
 router.post("/create", async (req, res) => {
-  let { amount } = req.body;
+  const { amount } = req.body;
 
-  // Validate amount
   if (!amount || isNaN(amount) || Number(amount) <= 0) {
     return res.status(400).json({ error: "Valid amount is required" });
   }
@@ -35,7 +35,7 @@ router.post("/create", async (req, res) => {
 
   try {
     const order = await paypalClient().execute(request);
-    const approvalUrl = order.result.links.find(link => link.rel === "approve")?.href;
+    const approvalUrl = order.result.links.find(l => l.rel === "approve")?.href;
 
     if (!approvalUrl) {
       return res.status(500).json({ error: "No approval link from PayPal" });
@@ -51,7 +51,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// POST /api/payment/capture — capture PayPal order
+// ===== Capture PayPal Order =====
 router.post("/capture", async (req, res) => {
   const { orderId } = req.body;
 

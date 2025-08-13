@@ -80,44 +80,25 @@ const QuickProgramsDetails = () => {
 
   const displayPrerequisite = prerequisite?.trim() || "Nothing";
 
-  const handlePayment = async (amount) => {
+  const handlePayment = async () => {
     try {
-      setPaymentLoading(true);
-      setErrorMessage(null);
-      console.log("Initiating payment with amount:", amount);
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/payment/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: 100 }), // your amount here
+        }
+      );
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
-
-      const res = await fetch(`${API_URL}/api/payment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ amount }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(
-          `Payment API error: ${res.status} - ${errorData.error || "Unknown error"}`
-        );
-      }
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
       const data = await res.json();
-      if (data.approval_url) {
-        window.location.href = data.approval_url;
-      } else {
-        throw new Error(data.error || "Payment failed: No approval URL");
-      }
+      console.log("Payment created:", data);
+      // Redirect to PayPal approval
+      window.location.href = data.approval_url;
     } catch (err) {
       console.error("Payment error:", err);
-      setErrorMessage(err.message || "Payment failed. Please try again.");
-    } finally {
-      setPaymentLoading(false);
     }
   };
 

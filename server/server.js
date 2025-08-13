@@ -10,21 +10,20 @@ const app = express();
 
 // ===== CORS CONFIG =====
 const allowedOrigins = [
-  process.env.FRONTEND_URL,          // e.g. https://brighthorizoninstitute.com
-  "http://localhost:5173",           // Vite dev server
-  "http://127.0.0.1:5173"             // Some browsers resolve localhost differently
+  process.env.FRONTEND_URL,   // e.g. https://brighthorizoninstitute.com
+  "http://localhost:5173",
+  "http://127.0.0.1:5173"
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow Postman, curl, etc.
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
     return callback(new Error(`CORS blocked: ${origin} not allowed`));
   },
-  credentials: true,
+  credentials: true
 }));
 
 // ===== Middleware =====
@@ -56,15 +55,18 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
-app.use("/api/payment", paymentRoutes); // works for guests & logged-in users
+app.use("/api/payment", paymentRoutes); // ✅ stays outside of frontend fallback
 
-// ===== Serve Frontend =====
-const clientPath = path.join(__dirname, "..", "client", "dist");
-app.use(express.static(clientPath));
+// ===== Serve Frontend in Production =====
+if (process.env.NODE_ENV === "production") {
+  const clientPath = path.join(__dirname, "..", "client", "dist");
+  app.use(express.static(clientPath));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(clientPath, "index.html"));
-});
+  // Any non-API route gets index.html
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientPath, "index.html"));
+  });
+}
 
 // ===== Error Handling =====
 app.use((err, req, res, next) => {
