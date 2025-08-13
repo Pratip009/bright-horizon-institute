@@ -17,13 +17,26 @@ const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
-// Middleware
+// ✅ Allow multiple origins for CORS
+const allowedOrigins = [
+  "https://brighthorizoninstitute.com",
+  "http://localhost:5173"
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(compression());
 
