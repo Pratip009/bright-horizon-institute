@@ -8,21 +8,11 @@ const { auth } = require("./middleware/authMiddleware");
 
 const app = express();
 
-// ===== CORS CONFIG =====
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-].filter(Boolean);
-
+// ===== CORS CONFIG: Allow all origins =====
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // Allow server-to-server & tools like Postman
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error(`CORS blocked: ${origin} not allowed`));
-    },
-    credentials: true,
+    origin: "*", // Allow all origins
+    credentials: false, // Set to false because credentials cannot be used with '*'
   })
 );
 
@@ -54,7 +44,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
-app.use("/api/payment", paymentRoutes); 
+app.use("/api/payment", paymentRoutes);
 
 // ===== Serve Frontend in Production =====
 if (process.env.NODE_ENV === "production") {
@@ -75,6 +65,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error", details: err.message });
 });
 
+// ===== Start Server =====
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
