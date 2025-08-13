@@ -14,7 +14,7 @@ const Courses = () => {
     const fetchCourses = async () => {
      
       try {
-        const response = await fetch(`${API_URL}/courses`);
+        const response = await fetch(`${API_URL}/api/courses`);
         if (!response.ok) {
           throw new Error("Failed to fetch courses.");
         }

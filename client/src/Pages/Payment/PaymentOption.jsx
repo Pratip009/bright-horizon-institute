@@ -7,7 +7,9 @@ import "aos/dist/aos.css";
 const PaymentOptions = () => {
   const location = useLocation();
   const [loading, setLoading] = useState({ full: false, partial: false });
+  const [customAmount, setCustomAmount] = useState(500);
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   useEffect(() => {
     window.scrollTo(0, 0);
     AOS.init({ duration: 1000 });
@@ -31,28 +33,22 @@ const PaymentOptions = () => {
   }
 
   const handlePayment = async (amount, type) => {
-    setLoading((prev) => ({ ...prev, [type]: true }));
+    if (type === "partial" && amount < 500) {
+      alert("Partial payment must be at least $500");
+      return;
+    }
 
-    const token = localStorage.getItem("token"); // or sessionStorage
-    console.log("Retrieved token:", token);
+    setLoading((prev) => ({ ...prev, [type]: true }));
+    const token = localStorage.getItem("token");
 
     try {
-      console.log("Initiating payment with amount:", amount);
-
       const res = await axios.post(
         `${API_URL}/payment`,
+        { amount },
         {
-          amount,
-          return_url: "http://localhost:3000/success",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // add token to request header
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      console.log("Payment response:", res.data);
 
       if (res.data.approval_url) {
         window.location.href = res.data.approval_url;
@@ -61,13 +57,6 @@ const PaymentOptions = () => {
       }
     } catch (error) {
       console.error("Payment Error:", error);
-      if (error.response) {
-        console.error(
-          "Server responded with:",
-          error.response.status,
-          error.response.data
-        );
-      }
       alert("Payment initiation failed. Please try again.");
     } finally {
       setLoading((prev) => ({ ...prev, [type]: false }));
@@ -85,48 +74,60 @@ const PaymentOptions = () => {
           data-aos="fade-down"
         >
           Payment Options for{" "}
-          <span className="text-blue-500">{course.title} </span>course
+          <span className="text-blue-500">{course.title}</span> course
         </h2>
 
         <p className="text-lg font-medium text-gray-700" data-aos="fade-up">
           Choose a payment option below:
         </p>
 
-        <div className="mt-6 flex flex-col gap-y-8">
-          {" "}
-          {/* Flexbox with gap */}
+        <div className="mt-6 flex flex-col gap-y-6">
+          {/* Full Payment */}
           <button
-            onClick={() => handlePayment(4000, "full")}
-            className="w-full py-4 bg-gradient-to-r from-green-400 to-green-600 text-white text-xl font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+            onClick={() => handlePayment(course.price, "full")}
             disabled={loading.full}
+            className="w-full py-4 bg-gradient-to-r from-green-400 to-green-600 text-white text-xl font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
             data-aos="fade-right"
           >
-            {loading.full ? "Processing..." : "Full Payment - $4000"}
+            {loading.full ? "Processing..." : `Pay Full $${course.price}`}
           </button>
-          <button
-            onClick={() => handlePayment(2000, "partial")}
-            className="w-full py-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white text-xl font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
-            disabled={loading.partial}
-            data-aos="fade-left"
-          >
-            {loading.partial ? "Processing..." : "Partial Payment - $2000"}
-          </button>
+
+          {/* Partial Payment */}
+          {course.price > 500 && (
+            <div className="flex flex-col gap-3" data-aos="fade-left">
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  min="500"
+                  max={course.price}
+                  value={customAmount}
+                  onChange={(e) => setCustomAmount(Number(e.target.value))}
+                  className="flex-1 px-3 py-2 border rounded-md text-sm"
+                />
+                <button
+                  onClick={() => handlePayment(customAmount, "partial")}
+                  disabled={loading.partial || customAmount < 500}
+                  className="px-4 py-2 rounded-lg text-white font-semibold bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+                >
+                  {loading.partial ? "Processing..." : "Pay Partial"}
+                </button>
+              </div>
+              <p className="text-sm text-gray-600">
+                Minimum partial payment: $500
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Additional Information */}
-        <div
-          className="mt-8 text-gray-700 space-y-2 text-sm"
-          data-aos="fade-up"
-        >
+        {/* Info */}
+        <div className="mt-8 text-gray-700 space-y-2 text-sm" data-aos="fade-up">
           <p className="flex items-center gap-2">
             <span className="text-green-500 text-lg">✔</span>
-            <strong>Full Payment:</strong> Pay the full amount upfront and
-            unlock exclusive discounts.
+            <strong>Full Payment:</strong> Pay the full amount upfront and unlock exclusive benefits.
           </p>
           <p className="flex items-center gap-2">
             <span className="text-blue-500 text-lg">✔</span>
-            <strong>Partial Payment:</strong> Start with a deposit and pay in
-            installments.
+            <strong>Partial Payment:</strong> Start with a deposit and pay in installments (min $500).
           </p>
         </div>
       </div>

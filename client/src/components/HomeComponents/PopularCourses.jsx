@@ -19,7 +19,7 @@ export default function PopularCourses() {
 
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${API_URL}/courses`);
+        const response = await fetch(`${API_URL}/api/courses`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

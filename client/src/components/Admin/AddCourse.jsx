@@ -32,7 +32,7 @@ const AddCourse = () => {
   const fetchCourses = async () => {
     try {
       //  const { data } = await axios.get(`${API_URL}/courses`);  <--  axios not available
-      const response = await fetch(`${API_URL}/courses`);
+      const response = await fetch(`${API_URL}/api/courses`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -56,7 +56,7 @@ const AddCourse = () => {
       let response;
       if (isEditing) {
         // Update the course
-        response = await fetch(`${API_URL}/courses/${editingCourseId}`, {
+        response = await fetch(`${API_URL}/api/courses/${editingCourseId}`, {
           method: "PUT", //  Correct method for update
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ const AddCourse = () => {
         alert("Course updated successfully");
       } else {
         // Add a new course
-        response = await fetch(`${API_URL}/courses`, {
+        response = await fetch(`${API_URL}/api/courses`, {
           method: "POST",  //  Correct method for create
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const AddCourse = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/courses/${id}`, {
+      const response = await fetch(`${API_URL}/api/courses/${id}`, {
         method: "DELETE", //  Correct method for delete
         headers: {
           Authorization: `Bearer ${token}`,

@@ -8,7 +8,7 @@ const Gallery = () => {
   // Function to fetch gallery items
   const fetchGallery = async () => {
     try {
-      const response = await fetch(`${API_URL}/gallery`); // Fetch data from API
+      const response = await fetch(`${API_URL}/api/gallery`); // Fetch data from API
       if (!response.ok) {
         throw new Error("Failed to fetch gallery data");
       }

@@ -32,7 +32,7 @@ const AddQuickProgram = () => {
   const fetchPrograms = async () => {
     console.log("📡 Fetching quick programs...");
     try {
-      const response = await fetch(`${API_URL}/quick-programs`);
+      const response = await fetch(`${API_URL}/api/quick-programs`);
       console.log("✅ Fetch response status:", response.status);
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,7 +60,7 @@ const AddQuickProgram = () => {
       if (isEditing) {
         console.log(`✏️ Updating program ID: ${editingProgramId}`);
         response = await fetch(
-          `${API_URL}/quick-programs/${editingProgramId}`,
+          `${API_URL}/api/quick-programs/${editingProgramId}`,
           {
             method: "PUT",
             headers: {
@@ -72,7 +72,7 @@ const AddQuickProgram = () => {
         );
       } else {
         console.log("➕ Adding new quick program...");
-        response = await fetch(`${API_URL}/quick-programs`, {
+        response = await fetch(`${API_URL}/api/quick-programs`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const AddQuickProgram = () => {
     console.log(`🗑 Deleting quick program ID: ${id}`);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/quick-programs/${id}`, {
+      const response = await fetch(`${API_URL}/api/quick-programs/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

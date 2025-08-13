@@ -21,7 +21,7 @@ const Blog = () => {
 
   const fetchBlogs = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/blogs`);
+      const response = await fetch(`${API_URL}/api/blogs`);
       if (!response.ok) throw new Error("Failed to fetch blogs");
       const data = await response.json();
       setBlogs(data);

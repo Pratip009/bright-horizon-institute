@@ -22,7 +22,7 @@ const AddBlog = () => {
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
   const fetchBlogs = async () => {
     try {
-      const { data } = await axios.get(`${API_URL}/blogs`);
+      const { data } = await axios.get(`${API_URL}/api/blogs`);
       setBlogs(data);
     } catch (error) {
       console.error("Error fetching blogs:", error);
@@ -94,7 +94,7 @@ const AddBlog = () => {
 
       const newBlog = { ...blog, imgUrl: imageUrl };
 
-      await axios.post(`${API_URL}/blogs`, newBlog, {
+      await axios.post(`${API_URL}/api/blogs`, newBlog, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -120,7 +120,7 @@ const AddBlog = () => {
     }
 
     try {
-      await axios.delete(`${API_URL}/blogs/${id}`, {
+      await axios.delete(`${API_URL}/api/blogs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Blog deleted successfully!");

@@ -40,7 +40,7 @@ const AddGalleryImage = () => {
       // Get the authentication token (from localStorage or another storage)
       const token = localStorage.getItem("token"); // Or wherever you're storing the token
 
-      const response = await axios.post(`${API_URL}/gallery`, formData, {
+      const response = await axios.post(`${API_URL}/api/gallery`, formData, {
         headers: {
           Authorization: `Bearer ${token}`, // Add the token to the headers
           "Content-Type": "multipart/form-data", // Ensures that the request is processed as form data
@@ -64,7 +64,7 @@ const AddGalleryImage = () => {
   // Fetch all gallery images
   const fetchGalleryImages = async () => {
     try {
-      const response = await axios.get(`${API_URL}/gallery`);
+      const response = await axios.get(`${API_URL}/api/gallery`);
       setGalleryImages(response.data);
     } catch (error) {
       console.error(error);
@@ -76,7 +76,7 @@ const AddGalleryImage = () => {
   const handleDeleteImage = async (imageId) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.delete(`${API_URL}/gallery/${imageId}`, {
+      const response = await axios.delete(`${API_URL}/api/gallery/${imageId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

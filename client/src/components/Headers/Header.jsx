@@ -39,7 +39,7 @@ const Header = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch(`${API_URL}/courses`);
+        const response = await fetch(`${API_URL}/api/courses`);
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();

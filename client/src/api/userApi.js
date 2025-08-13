@@ -15,7 +15,7 @@ export const fetchUsers = async () => {
   }
 
   try {
-    const response = await axios.get(`${API_URL}/users`, {
+    const response = await axios.get(`${API_URL}/api/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -40,7 +40,7 @@ export const deleteUser = async (id) => {
   }
 
   try {
-    await axios.delete(`${API_URL}/users/${id}`, {
+    await axios.delete(`${API_URL}/api/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -64,7 +64,7 @@ export const fetchUserProfile = async (userId) => {
   }
 
   try {
-    const response = await axios.get(`${API_URL}/users/${userId}`, {
+    const response = await axios.get(`${API_URL}/api/users/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
