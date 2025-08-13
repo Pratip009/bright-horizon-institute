@@ -6,28 +6,17 @@ const path = require("path");
 const mongoose = require("mongoose");
 const { auth } = require("./middleware/authMiddleware");
 
-// Routes
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const courseRoutes = require("./routes/courseRoutes");
-const blogRoutes = require("./routes/blogRoutes");
-const galleryRoutes = require("./routes/galleryRoutes");
-const quickProgramsRoute = require("./routes/quickProgramsRoute");
-const paymentRoutes = require("./routes/paymentRoutes");
-
 const app = express();
 
-// --- CORS CONFIG (temp: allow all for debugging) ---
+// ===== Middleware =====
 app.use(cors({
-  origin: "*",
+  origin: process.env.FRONTEND_URL || "*",
   credentials: true,
 }));
-
-// Middleware
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(compression());
 
-// --- MONGODB CONNECTION ---
+// ===== MongoDB Connection =====
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -36,22 +25,35 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ MongoDB Error:", err.message));
 
-// --- API ROUTES ---
+// ===== Import Routes =====
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const courseRoutes = require("./routes/courseRoutes");
+const blogRoutes = require("./routes/blogRoutes");
+const galleryRoutes = require("./routes/galleryRoutes");
+const quickProgramsRoute = require("./routes/quickProgramsRoute");
+const paymentRoutes = require("./routes/paymentRoutes");
+
+// ===== API Routes =====
 app.use("/auth", authRoutes);
 app.use("/api/users", auth(["admin"]), userRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
-app.use("/api/payment", auth(["user", "admin"]), paymentRoutes);
 
-// --- FRONTEND SERVE ---
-app.use(express.static(path.join(__dirname, "..", "client", "dist")));
+// ✅ Payment works for both guests & logged-in users
+app.use("/api/payment", paymentRoutes);
+
+// ===== Serve Frontend =====
+const clientPath = path.join(__dirname, "..", "client", "dist");
+app.use(express.static(clientPath));
+
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
+  res.sendFile(path.join(clientPath, "index.html"));
 });
 
-// --- ERROR HANDLING ---
+// ===== Error Handling =====
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({
@@ -60,8 +62,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// --- START SERVER ---
+// ===== Start Server =====
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on port ${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
