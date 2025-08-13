@@ -1,62 +1,42 @@
 const express = require("express");
 const paypal = require("@paypal/checkout-server-sdk");
 const router = express.Router();
-require("dotenv").config();
 
-const Environment =
-  process.env.PAYPAL_MODE === "live"
-    ? paypal.core.LiveEnvironment
-    : paypal.core.SandboxEnvironment;
-
-const paypalClient = new paypal.core.PayPalHttpClient(
-  new Environment(
+// PayPal Client
+function paypalClient() {
+  let environment = new paypal.core.SandboxEnvironment(
     process.env.PAYPAL_CLIENT_ID,
     process.env.PAYPAL_CLIENT_SECRET
-  )
-);
+  );
+  return new paypal.core.PayPalHttpClient(environment);
+}
 
-// Create order
-router.post("/create", async (req, res) => {
-  try {
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value: req.body.amount,
-          },
-        },
-      ],
-      application_context: {
-        brand_name: "Bright Horizon Institute",
-        landing_page: "NO_PREFERENCE",
-        user_action: "PAY_NOW",
-        return_url: `${process.env.FRONTEND_URL}/payment-success`,
-        cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
-      },
-    });
-
-    const order = await paypalClient.execute(request);
-    res.json({ id: order.result.id });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error creating PayPal order");
+// POST /api/payment — create PayPal order
+router.post("/", async (req, res) => {
+  const { amount } = req.body;
+  if (!amount) {
+    return res.status(400).json({ error: "Amount is required" });
   }
-});
 
-// Capture order
-router.post("/capture/:orderId", async (req, res) => {
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.prefer("return=representation");
+  request.requestBody({
+    intent: "CAPTURE",
+    purchase_units: [{ amount: { currency_code: "USD", value: amount } }],
+  });
+
   try {
-    const request = new paypal.orders.OrdersCaptureRequest(req.params.orderId);
-    request.requestBody({});
-    const capture = await paypalClient.execute(request);
-    res.json(capture.result);
+    const order = await paypalClient().execute(request);
+    const approvalUrl = order.result.links.find(
+      (link) => link.rel === "approve"
+    )?.href;
+    if (!approvalUrl) {
+      throw new Error("No approval link from PayPal");
+    }
+    res.json({ approval_url: approvalUrl });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error capturing PayPal order");
+    console.error("PayPal create order error:", err);
+    res.status(500).json({ error: "Failed to create PayPal order" });
   }
 });
 
