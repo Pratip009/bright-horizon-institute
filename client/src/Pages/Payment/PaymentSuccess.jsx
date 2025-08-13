@@ -1,15 +1,53 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const PaymentSuccess = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  useEffect(() => {
+    const verifyPayment = async () => {
+      const paymentId = searchParams.get("paymentId");
+      const payerId = searchParams.get("PayerID"); // PayPal param
+      const token = localStorage.getItem("token");
+
+      if (!paymentId || !payerId) {
+        setMessage("Invalid payment details");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/api/purchases/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ paymentId, payerId }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Verification failed");
+
+        setMessage("Payment successful! Redirecting to your courses...");
+        setTimeout(() => navigate("/my-courses"), 2000);
+      } catch (err) {
+        setMessage(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyPayment();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
-      <div className="relative bg-white/80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl max-w-lg text-center">
-        <h2 className="text-4xl font-bold text-green-600 mb-6">🎉 Payment Successful!</h2>
-        <p className="text-lg text-gray-700 mb-6">Thank you for your payment. Your enrollment is confirmed!</p>
-        <Link to="/" className="inline-block px-6 py-3 bg-green-500 text-white font-semibold rounded-xl shadow-lg hover:scale-105 transition-all duration-300" style={{ textDecoration:'none' }}>
-          Go to Home
-        </Link>
-      </div>
+    <div className="flex justify-center items-center h-screen">
+      {loading ? <p>Verifying payment...</p> : <p>{message}</p>}
     </div>
   );
 };

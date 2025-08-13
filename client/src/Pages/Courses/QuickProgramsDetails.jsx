@@ -17,11 +17,9 @@ const QuickProgramsDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [customAmount, setCustomAmount] = useState(500);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // API URL
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
@@ -31,13 +29,9 @@ const QuickProgramsDetails = () => {
     const fetchProgram = async () => {
       try {
         const response = await fetch(`${API_URL}/api/quick-programs/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setProgram(data);
       } catch (err) {
@@ -49,7 +43,45 @@ const QuickProgramsDetails = () => {
     };
 
     fetchProgram();
-  }, [id]);
+  }, [id, API_URL]);
+
+  const handlePayment = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return navigate("/login");
+
+    setErrorMessage(null);
+    setPaymentLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/purchases`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ courseId: id }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Payment request failed");
+
+      // Redirect user to PayPal approval link
+      window.location.href = data.approval_url;
+    } catch (err) {
+      console.error("Payment error:", err);
+      setErrorMessage(err.message || "Failed to start payment");
+    } finally {
+      setPaymentLoading(false);
+    }
+  };
+
+  const handleEnrollClick = () => {
+    if (!isSignedIn) {
+      navigate("/login");
+    } else {
+      setShowPaymentOptions(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -79,36 +111,6 @@ const QuickProgramsDetails = () => {
   } = program;
 
   const displayPrerequisite = prerequisite?.trim() || "Nothing";
-
-  const handlePayment = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/payment/create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 100 }), // your amount here
-        }
-      );
-
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-      const data = await res.json();
-      console.log("Payment created:", data);
-      // Redirect to PayPal approval
-      window.location.href = data.approval_url;
-    } catch (err) {
-      console.error("Payment error:", err);
-    }
-  };
-
-  const handleEnrollClick = () => {
-    if (!isSignedIn) {
-      navigate("/login");
-    } else {
-      setShowPaymentOptions(true);
-    }
-  };
 
   return (
     <div className="container mx-auto mt-16 font-nunito">
@@ -192,38 +194,16 @@ const QuickProgramsDetails = () => {
             {title}
           </h2>
           <div className="flex flex-col gap-4 mb-6">
-            <InfoCard
-              icon={<FaDollarSign />}
-              label="Price"
-              value={`$${price}`}
-              color="indigo"
-            />
-            <InfoCard
-              icon={<FaClock />}
-              label="Duration"
-              value={duration}
-              color="green"
-            />
-            <InfoCard
-              icon={<FaHourglassHalf />}
-              label="Total Hours"
-              value={totalHours}
-              color="orange"
-            />
-            <InfoCard
-              icon={<FaClipboardList />}
-              label="Prerequisite"
-              value={displayPrerequisite}
-              color="red"
-            />
+            <InfoCard icon={<FaDollarSign />} label="Price" value={`$${price}`} color="indigo" />
+            <InfoCard icon={<FaClock />} label="Duration" value={duration} color="green" />
+            <InfoCard icon={<FaHourglassHalf />} label="Total Hours" value={totalHours} color="orange" />
+            <InfoCard icon={<FaClipboardList />} label="Prerequisite" value={displayPrerequisite} color="red" />
           </div>
 
           {!showPaymentOptions ? (
             <button
               className={`w-full py-3 px-4 text-white text-2xl font-semibold rounded-xl shadow-lg transition-transform duration-300 transform hover:-translate-y-1 hover:scale-105 ${
-                isSignedIn
-                  ? "bg-green-400 hover:bg-green-700"
-                  : "bg-blue-500 hover:bg-blue-700"
+                isSignedIn ? "bg-green-400 hover:bg-green-700" : "bg-blue-500 hover:bg-blue-700"
               }`}
               onClick={handleEnrollClick}
             >
@@ -232,31 +212,12 @@ const QuickProgramsDetails = () => {
           ) : (
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => handlePayment(price)}
+                onClick={handlePayment}
                 disabled={paymentLoading}
                 className="w-full py-2 rounded-lg text-white font-semibold text-center text-lg bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-600 shadow hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 hover:scale-105"
               >
                 {paymentLoading ? "Processing..." : `Pay Full $${price}`}
               </button>
-              {price > 500 && (
-                <div className="flex gap-2">
-                  <input
-                    type="number"
-                    min="500"
-                    max={price}
-                    value={customAmount}
-                    onChange={(e) => setCustomAmount(Number(e.target.value))}
-                    className="flex-1 px-2 py-2 border rounded-md text-sm"
-                  />
-                  <button
-                    onClick={() => handlePayment(customAmount)}
-                    disabled={paymentLoading || customAmount < 500}
-                    className="px-3 py-2 rounded-lg text-white font-semibold text-sm bg-green-500 hover:bg-green-600 transition-all duration-200"
-                  >
-                    {paymentLoading ? "Processing..." : "Pay Custom"}
-                  </button>
-                </div>
-              )}
             </div>
           )}
         </div>
