@@ -11,20 +11,24 @@ const app = express();
 // ===== CORS CONFIG: Allow all origins =====
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:8000",
   "https://brighthorizoninstitute.com",
+  "https://www.brighthorizoninstitute.com",
+  "https://bright-horizon-institute-2.onrender.com",
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: ${origin} not allowed`));
-    }
-  },
-  credentials: true,
-}));
-
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin} not allowed`));
+      }
+    },
+    credentials: true,
+  })
+);
 
 // ===== Middleware =====
 app.use(express.json({ limit: "10mb" }));
@@ -72,7 +76,9 @@ if (process.env.NODE_ENV === "production") {
 // ===== Error Handling =====
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
-  res.status(500).json({ error: "Internal Server Error", details: err.message });
+  res
+    .status(500)
+    .json({ error: "Internal Server Error", details: err.message });
 });
 
 // ===== Start Server =====

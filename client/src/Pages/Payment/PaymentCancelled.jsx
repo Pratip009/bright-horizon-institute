@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-const PaymentSuccess = () => {
+const PaymentCancelled = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || "https://bright-horizon-institute-2.onrender.com";
 
   useEffect(() => {
-    const verifyPayment = async () => {
+    const cancelPayment = async () => {
       const paymentId = searchParams.get("token");
       if (!paymentId) {
         alert("Missing payment ID");
@@ -15,34 +15,25 @@ const PaymentSuccess = () => {
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/payment/verify`, {
+        await fetch(`${API_URL}/api/payment/cancel/${paymentId}`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ paymentId }),
         });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert("Payment successful!");
-          navigate("/my-courses");
-        } else {
-          alert(data.message || "Payment verification failed");
-          navigate("/quick-programs");
-        }
+        alert("Payment cancelled.");
+        navigate("/quick-programs");
       } catch (err) {
-        console.error("Verification error:", err);
-        alert("Failed to verify payment");
+        console.error("Cancel error:", err);
+        alert("Failed to cancel payment");
         navigate("/quick-programs");
       }
     };
 
-    verifyPayment();
+    cancelPayment();
   }, [searchParams, navigate]);
 
-  return <div>Processing payment...</div>;
+  return <div>Payment cancelled...</div>;
 };
 
-export default PaymentSuccess;
+export default PaymentCancelled;

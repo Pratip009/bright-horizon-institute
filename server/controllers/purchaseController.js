@@ -5,22 +5,46 @@ const axios = require("axios");
 
 // Helper: Get PayPal access token
 const getPayPalAccessToken = async () => {
-  const auth = Buffer.from(
-    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`
-  ).toString("base64");
+  try {
+    const paypalBaseUrl =
+      process.env.PAYPAL_MODE === "sandbox"
+        ? "https://api-m.sandbox.paypal.com"
+        : "https://api-m.paypal.com";
 
-  const response = await axios.post(
-    "https://api-m.sandbox.paypal.com/v1/oauth2/token",
-    "grant_type=client_credentials",
-    {
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+    const auth = Buffer.from(
+      `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+    ).toString("base64");
+
+    if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
+      throw new Error(
+        "PayPal credentials are missing in environment variables"
+      );
     }
-  );
 
-  return response.data.access_token;
+    const response = await axios.post(
+      `${paypalBaseUrl}/v1/oauth2/token`,
+      "grant_type=client_credentials",
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    if (!response.data.access_token) {
+      throw new Error("Failed to retrieve PayPal access token");
+    }
+
+    return response.data.access_token;
+  } catch (error) {
+    console.error("❌ getPayPalAccessToken error:", {
+      message: error.message,
+      paypalError: error.response?.data,
+      stack: error.stack,
+    });
+    throw new Error("Failed to authenticate with PayPal");
+  }
 };
 
 // ✅ Initiate PayPal payment
@@ -36,7 +60,10 @@ exports.initiatePayment = async (req, res) => {
     if (!user || !course)
       return res.status(404).json({ message: "User or course not found" });
 
-    // Prevent duplicate purchase
+    if (isNaN(course.price) || course.price <= 0) {
+      return res.status(400).json({ message: "Invalid course price" });
+    }
+
     const alreadyPurchased = await Purchase.findOne({
       user: userId,
       course: courseId,
@@ -55,8 +82,9 @@ exports.initiatePayment = async (req, res) => {
           {
             amount: {
               currency_code: "USD",
-              value: course.price.toString(),
+              value: course.price.toFixed(2), // Ensure two decimal places
             },
+            description: `Purchase of ${course.title}`, // Add description
           },
         ],
         application_context: {
@@ -80,7 +108,6 @@ exports.initiatePayment = async (req, res) => {
     if (!approval_url || !paymentId)
       return res.status(500).json({ message: "Failed to create PayPal order" });
 
-    // Save pending purchase
     await Purchase.create({
       user: userId,
       course: courseId,
@@ -91,8 +118,15 @@ exports.initiatePayment = async (req, res) => {
 
     res.status(200).json({ approval_url, paymentId });
   } catch (error) {
-    console.error("❌ PayPal initiatePayment error:", error.response?.data || error.message);
-    res.status(500).json({ message: "PayPal payment failed", error: error.message });
+    console.error("❌ PayPal initiatePayment error:", {
+      message: error.message,
+      paypalError: error.response?.data,
+      stack: error.stack,
+    });
+    res.status(500).json({
+      message: "PayPal payment failed",
+      error: error.response?.data?.message || error.message,
+    });
   }
 };
 
@@ -102,6 +136,12 @@ exports.verifyPayment = async (req, res) => {
     const { paymentId } = req.body;
     if (!paymentId)
       return res.status(400).json({ message: "Missing paymentId" });
+
+    const purchase = await Purchase.findOne({ paymentId });
+    if (!purchase)
+      return res.status(404).json({ message: "Purchase not found" });
+    if (purchase.status === "completed")
+      return res.status(400).json({ message: "Payment already completed" });
 
     const accessToken = await getPayPalAccessToken();
 
@@ -116,21 +156,19 @@ exports.verifyPayment = async (req, res) => {
       }
     );
 
-    const purchase = await Purchase.findOne({ paymentId })
-      .populate("course")
-      .populate("user");
-
-    if (!purchase)
-      return res.status(404).json({ message: "Purchase not found" });
+    if (captureResponse.data.status !== "COMPLETED") {
+      return res.status(400).json({ message: "Payment capture failed" });
+    }
 
     purchase.status = "completed";
     await purchase.save();
 
-    purchase.user.purchasedCourses.push({
-      course: purchase.course._id,
+    const user = await User.findById(purchase.user);
+    user.purchasedCourses.push({
+      course: purchase.course,
       purchasedAt: new Date(),
     });
-    await purchase.user.save();
+    await user.save();
 
     res.status(200).json({
       message: "Payment verified successfully",
@@ -138,8 +176,15 @@ exports.verifyPayment = async (req, res) => {
       paypal: captureResponse.data,
     });
   } catch (error) {
-    console.error("❌ PayPal verifyPayment error:", error.response?.data || error.message);
-    res.status(500).json({ message: "Failed to verify payment" });
+    console.error("❌ PayPal verifyPayment error:", {
+      message: error.message,
+      paypalError: error.response?.data,
+      stack: error.stack,
+    });
+    res.status(500).json({
+      message: "Failed to verify payment",
+      error: error.response?.data?.message || error.message,
+    });
   }
 };
 

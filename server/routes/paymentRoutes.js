@@ -1,21 +1,16 @@
-// routes/paymentRoutes.js
 const express = require("express");
+const router = express.Router();
+const { auth } = require("../middleware/authMiddleware");
 const {
-  verifyPayment,
   initiatePayment,
+  verifyPayment,
+  cancelPayment,
   getAllPayments,
 } = require("../controllers/purchaseController");
-const { auth } = require("../middleware/authMiddleware");
 
-const router = express.Router();
-
-// Initiate a payment
 router.post("/", auth(), initiatePayment);
-
-// Verify payment after gateway callback
 router.post("/verify", auth(), verifyPayment);
-
-// Get all payments (admin only)
-router.get("/all", auth(["admin"]), getAllPayments);
+router.post("/cancel/:paymentId", auth(), cancelPayment);
+router.get("/", auth(["admin"]), getAllPayments);
 
 module.exports = router;
