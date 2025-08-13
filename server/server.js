@@ -17,24 +17,13 @@ const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
-// --- CORS CONFIG ---
-const allowedOrigins = [
-  process.env.FRONTEND_URL || "http://localhost:3000",
-  "https://brighthorizoninstitute.com"
-];
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed from this origin: " + origin));
-      }
-    },
-    credentials: true,
-  })
-);
+// --- CORS CONFIG (temp: allow all for debugging) ---
+app.use(cors({
+  origin: "*",
+  credentials: true,
+}));
 
+// Middleware
 app.use(express.json());
 app.use(compression());
 
@@ -45,7 +34,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+  .catch((err) => console.error("❌ MongoDB Error:", err.message));
 
 // --- API ROUTES ---
 app.use("/auth", authRoutes);
@@ -65,9 +54,10 @@ app.get("*", (req, res) => {
 // --- ERROR HANDLING ---
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
-  res
-    .status(500)
-    .json({ error: "Internal Server Error", details: err.message });
+  res.status(500).json({
+    error: "Internal Server Error",
+    details: err.message,
+  });
 });
 
 // --- START SERVER ---
