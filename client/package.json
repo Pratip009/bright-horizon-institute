@@ -20,7 +20,7 @@
     "bright-horizon": "file:",
     "classnames": "^2.5.1",
     "framer-motion": "^12.16.0",
-    "jwt-decode": "^4.0.0",
+    "jwt-decode": "^3.1.2",
     "lucide-react": "^0.487.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.9",
