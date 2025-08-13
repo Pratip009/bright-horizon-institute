@@ -10,21 +10,24 @@ const app = express();
 
 // ===== CORS CONFIG =====
 const allowedOrigins = [
-  process.env.FRONTEND_URL,   // e.g. https://brighthorizoninstitute.com
+  process.env.FRONTEND_URL, // e.g. https://brighthorizoninstitute.com
   "http://localhost:5173",
-  "http://127.0.0.1:5173"
+  "http://127.0.0.1:5173",
+  "https://bright-horizon-institute-n9i7qwac7-pratip009s-projects.vercel.app",
 ].filter(Boolean);
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow Postman, curl, etc.
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error(`CORS blocked: ${origin} not allowed`));
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // allow Postman, curl, etc.
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked: ${origin} not allowed`));
+    },
+    credentials: true,
+  })
+);
 
 // ===== Middleware =====
 app.use(express.json({ limit: "10mb" }));
