@@ -1,98 +1,63 @@
 const express = require("express");
-const paypal = require("paypal-rest-sdk");
-
+const paypal = require("@paypal/checkout-server-sdk");
 const router = express.Router();
+require("dotenv").config();
 
-// Validate environment variables
-const requiredEnvVars = [
-  "PAYPAL_CLIENT_ID",
-  "PAYPAL_CLIENT_SECRET",
-  "PAYPAL_MODE",
-  "FRONTEND_URL",
-];
-const missingEnvVars = requiredEnvVars.filter((varName) => !process.env[varName]);
-if (missingEnvVars.length > 0) {
-  console.error("❌ Missing environment variables:", missingEnvVars.join(", "));
-  throw new Error("Missing required environment variables for PayPal configuration");
-}
+const Environment =
+  process.env.PAYPAL_MODE === "live"
+    ? paypal.core.LiveEnvironment
+    : paypal.core.SandboxEnvironment;
 
-// PayPal configuration
-paypal.configure({
-  mode: process.env.PAYPAL_MODE || "sandbox", // 'sandbox' or 'live'
-  client_id: process.env.PAYPAL_CLIENT_ID,
-  client_secret: process.env.PAYPAL_CLIENT_SECRET,
-});
+const paypalClient = new paypal.core.PayPalHttpClient(
+  new Environment(
+    process.env.PAYPAL_CLIENT_ID,
+    process.env.PAYPAL_CLIENT_SECRET
+  )
+);
 
-// Create PayPal payment
-router.post("/", (req, res) => {
-  const { amount } = req.body;
-
-  // Validate amount
-  if (!amount || isNaN(amount) || amount <= 0) {
-    console.error("Invalid amount received:", amount);
-    return res.status(400).json({ error: "Invalid amount: Must be a positive number" });
-  }
-
-  const create_payment_json = {
-    intent: "sale",
-    payer: { payment_method: "paypal" },
-    redirect_urls: {
-      return_url: `${process.env.FRONTEND_URL}/payment-success`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment-failed`,
-    },
-    transactions: [
-      {
-        amount: {
-          currency: "USD",
-          total: parseFloat(amount).toFixed(2),
+// Create order
+router.post("/create", async (req, res) => {
+  try {
+    const request = new paypal.orders.OrdersCreateRequest();
+    request.prefer("return=representation");
+    request.requestBody({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: req.body.amount,
+          },
         },
-        description: "Course Payment",
+      ],
+      application_context: {
+        brand_name: "Bright Horizon Institute",
+        landing_page: "NO_PREFERENCE",
+        user_action: "PAY_NOW",
+        return_url: `${process.env.FRONTEND_URL}/payment-success`,
+        cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
       },
-    ],
-  };
+    });
 
-  paypal.payment.create(create_payment_json, (err, payment) => {
-    if (err) {
-      console.error("❌ PayPal Payment Creation Error:", JSON.stringify(err, null, 2));
-      return res.status(500).json({
-        error: "Payment creation failed",
-        details: err.response?.message || err.message,
-      });
-    }
-
-    const approvalUrl = payment.links.find((link) => link.rel.toLowerCase() === "approval_url");
-
-    if (!approvalUrl) {
-      console.error("No approval URL found in PayPal response:", payment);
-      return res.status(500).json({ error: "No approval URL found" });
-    }
-
-    res.json({ approval_url: approvalUrl.href });
-  });
+    const order = await paypalClient.execute(request);
+    res.json({ id: order.result.id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error creating PayPal order");
+  }
 });
 
-// Execute PayPal payment
-router.post("/execute", (req, res) => {
-  const { paymentId, PayerID } = req.body;
-
-  if (!paymentId || !PayerID) {
-    console.error("Missing payment details:", { paymentId, PayerID });
-    return res.status(400).json({ error: "Missing paymentId or PayerID" });
+// Capture order
+router.post("/capture/:orderId", async (req, res) => {
+  try {
+    const request = new paypal.orders.OrdersCaptureRequest(req.params.orderId);
+    request.requestBody({});
+    const capture = await paypalClient.execute(request);
+    res.json(capture.result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error capturing PayPal order");
   }
-
-  const execute_payment_json = { payer_id: PayerID };
-
-  paypal.payment.execute(paymentId, execute_payment_json, (err, payment) => {
-    if (err) {
-      console.error("❌ PayPal Payment Execution Error:", JSON.stringify(err, null, 2));
-      return res.status(500).json({
-        error: "Payment execution failed",
-        details: err.response?.message || err.message,
-      });
-    }
-
-    res.json({ success: true, payment });
-  });
 });
 
 module.exports = router;

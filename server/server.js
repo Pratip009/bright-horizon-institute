@@ -17,20 +17,18 @@ const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
-// ✅ Allow multiple origins for CORS
+// --- CORS CONFIG ---
 const allowedOrigins = [
-  "https://brighthorizoninstitute.com",
-  "http://localhost:5173"
+  process.env.FRONTEND_URL || "http://localhost:3000",
+  "https://brighthorizoninstitute.com"
 ];
-
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow requests with no origin (like mobile apps or curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error("CORS not allowed from this origin: " + origin));
       }
     },
     credentials: true,
@@ -40,16 +38,16 @@ app.use(
 app.use(express.json());
 app.use(compression());
 
-// MongoDB Connection
+// --- MONGODB CONNECTION ---
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Error:", err));
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Error:", err));
 
-// API Routes
+// --- API ROUTES ---
 app.use("/auth", authRoutes);
 app.use("/api/users", auth(["admin"]), userRoutes);
 app.use("/api/courses", courseRoutes);
@@ -58,18 +56,22 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
 app.use("/api/payment", auth(["user", "admin"]), paymentRoutes);
 
-// Serve React Frontend
+// --- FRONTEND SERVE ---
 app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 });
 
-// Error Handling Middleware
+// --- ERROR HANDLING ---
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
-  res.status(500).json({ error: "Internal Server Error", details: err.message });
+  res
+    .status(500)
+    .json({ error: "Internal Server Error", details: err.message });
 });
 
-// Start server
+// --- START SERVER ---
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on port ${PORT}`)
+);
