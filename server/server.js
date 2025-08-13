@@ -9,12 +9,23 @@ const { auth } = require("./middleware/authMiddleware");
 const app = express();
 
 // ===== CORS CONFIG: Allow all origins =====
-app.use(
-  cors({
-    origin: "*", // Allow all origins
-    credentials: false, // Set to false because credentials cannot be used with '*'
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://brighthorizoninstitute.com",
+  "https://bright-horizon-institute-kp03ik17k-pratip009s-projects.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin} not allowed`));
+    }
+  },
+  credentials: true,
+}));
+
 
 // ===== Middleware =====
 app.use(express.json({ limit: "10mb" }));
