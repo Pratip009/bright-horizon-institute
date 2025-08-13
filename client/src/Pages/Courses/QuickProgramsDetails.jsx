@@ -19,9 +19,10 @@ const QuickProgramsDetails = () => {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [customAmount, setCustomAmount] = useState(500);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  // ✅ Make sure this points to your backend, not frontend
-  const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  // API URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -29,13 +30,18 @@ const QuickProgramsDetails = () => {
 
     const fetchProgram = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/quick-programs/${id}`);
-        if (!response.ok)
+        const response = await fetch(`${API_URL}/api/quick-programs/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         setProgram(data);
       } catch (err) {
-        console.error(err);
+        console.error("Fetch program error:", err);
         setProgram(null);
       } finally {
         setLoading(false);
@@ -45,18 +51,21 @@ const QuickProgramsDetails = () => {
     fetchProgram();
   }, [id]);
 
-  if (loading)
+  if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
         <SpinnerLoader size={48} />
       </div>
     );
-  if (!program)
+  }
+
+  if (!program) {
     return (
       <div className="text-center mt-12 text-gray-600 font-medium">
         Program not found.
       </div>
     );
+  }
 
   const {
     title,
@@ -74,45 +83,59 @@ const QuickProgramsDetails = () => {
   const handlePayment = async (amount) => {
     try {
       setPaymentLoading(true);
-      console.log("Initiating payment for amount:", amount);
+      setErrorMessage(null);
+      console.log("Initiating payment with amount:", amount);
 
-      const res = await fetch(`${BACKEND_URL}/api/payment`, {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const res = await fetch(`${API_URL}/api/payment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ amount }),
       });
 
       if (!res.ok) {
-        console.error("Server returned error:", res.status);
-        alert("Payment API error: " + res.status);
-        setPaymentLoading(false);
-        return;
+        const errorData = await res.json();
+        throw new Error(
+          `Payment API error: ${res.status} - ${errorData.error || "Unknown error"}`
+        );
       }
 
       const data = await res.json();
       if (data.approval_url) {
-        window.location.href = data.approval_url; // redirect to PayPal
+        window.location.href = data.approval_url;
       } else {
-        alert(data.error || "Payment failed");
+        throw new Error(data.error || "Payment failed: No approval URL");
       }
     } catch (err) {
-      console.error("Payment Error:", err);
-      alert("Payment failed");
+      console.error("Payment error:", err);
+      setErrorMessage(err.message || "Payment failed. Please try again.");
     } finally {
       setPaymentLoading(false);
     }
   };
 
   const handleEnrollClick = () => {
-    if (!isSignedIn) navigate("/login");
-    else setShowPaymentOptions(true);
+    if (!isSignedIn) {
+      navigate("/login");
+    } else {
+      setShowPaymentOptions(true);
+    }
   };
 
   return (
     <div className="container mx-auto mt-16 font-nunito">
+      {errorMessage && (
+        <div className="bg-red-100 text-red-700 p-4 rounded-md mb-4 text-center">
+          {errorMessage}
+        </div>
+      )}
       <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12">
         {/* Left: Image + Tabs */}
         <div className="lg:w-2/3 w-full space-y-6">
@@ -168,7 +191,8 @@ const QuickProgramsDetails = () => {
                   <strong>Prerequisite:</strong> {displayPrerequisite}
                 </p>
                 <p>
-                  <strong>Total Hours:</strong> {totalHours || "Not specified"} Hours
+                  <strong>Total Hours:</strong> {totalHours || "Not specified"}{" "}
+                  Hours
                 </p>
                 <p>
                   <strong>Duration:</strong> {duration || "Not specified"}
@@ -183,18 +207,42 @@ const QuickProgramsDetails = () => {
 
         {/* Right: Sidebar Info */}
         <div className="lg:w-1/3 w-full bg-white p-6 rounded-2xl shadow-lg self-start">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900">{title}</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900">
+            {title}
+          </h2>
           <div className="flex flex-col gap-4 mb-6">
-            <InfoCard icon={<FaDollarSign />} label="Price" value={`$${price}`} color="indigo" />
-            <InfoCard icon={<FaClock />} label="Duration" value={duration} color="green" />
-            <InfoCard icon={<FaHourglassHalf />} label="Total Hours" value={totalHours} color="orange" />
-            <InfoCard icon={<FaClipboardList />} label="Prerequisite" value={displayPrerequisite} color="red" />
+            <InfoCard
+              icon={<FaDollarSign />}
+              label="Price"
+              value={`$${price}`}
+              color="indigo"
+            />
+            <InfoCard
+              icon={<FaClock />}
+              label="Duration"
+              value={duration}
+              color="green"
+            />
+            <InfoCard
+              icon={<FaHourglassHalf />}
+              label="Total Hours"
+              value={totalHours}
+              color="orange"
+            />
+            <InfoCard
+              icon={<FaClipboardList />}
+              label="Prerequisite"
+              value={displayPrerequisite}
+              color="red"
+            />
           </div>
 
           {!showPaymentOptions ? (
             <button
               className={`w-full py-3 px-4 text-white text-2xl font-semibold rounded-xl shadow-lg transition-transform duration-300 transform hover:-translate-y-1 hover:scale-105 ${
-                isSignedIn ? "bg-green-400 hover:bg-green-700" : "bg-blue-500 hover:bg-blue-700"
+                isSignedIn
+                  ? "bg-green-400 hover:bg-green-700"
+                  : "bg-blue-500 hover:bg-blue-700"
               }`}
               onClick={handleEnrollClick}
             >
