@@ -8,11 +8,26 @@ const { auth } = require("./middleware/authMiddleware");
 
 const app = express();
 
-// ===== Middleware =====
+// ===== CORS CONFIG =====
+const allowedOrigins = [
+  process.env.FRONTEND_URL,          // e.g. https://brighthorizoninstitute.com
+  "http://localhost:5173",           // Vite dev server
+  "http://127.0.0.1:5173"             // Some browsers resolve localhost differently
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "*",
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked: ${origin} not allowed`));
+  },
   credentials: true,
 }));
+
+// ===== Middleware =====
 app.use(express.json({ limit: "10mb" }));
 app.use(compression());
 
@@ -41,9 +56,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
-
-// ✅ Payment works for both guests & logged-in users
-app.use("/api/payment", paymentRoutes);
+app.use("/api/payment", paymentRoutes); // works for guests & logged-in users
 
 // ===== Serve Frontend =====
 const clientPath = path.join(__dirname, "..", "client", "dist");
