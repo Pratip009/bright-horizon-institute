@@ -15,7 +15,7 @@ const allowedOrigins = [
   "https://brighthorizoninstitute.com",
   "https://www.brighthorizoninstitute.com",
   "https://bright-horizon-institute-2.onrender.com",
-  "https://www.sandbox.paypal.com"
+  "https://www.sandbox.paypal.com",
 ];
 
 app.use(
@@ -59,7 +59,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/quick-programs", quickProgramsRoute);
-app.use("/api/payment", paymentRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // ===== Serve Frontend in Production =====
 if (process.env.NODE_ENV === "production") {

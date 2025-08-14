@@ -1,18 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { auth } = require("../middleware/authMiddleware");
 const {
-  initiatePayment,
-  verifyPayment,
-  cancelPayment,
+  createOrder,
+  captureOrder,
   getAllPayments,
-  paymentSuccess,
-} = require("../controllers/purchaseController");
+} = require("../controllers/paymentController");
+const { auth } = require("../middleware/authMiddleware");
 
-router.post("/", auth(), initiatePayment);
-router.post("/verify", auth(), verifyPayment);
-router.post("/cancel/:paymentId", auth(), cancelPayment);
+router.post("/create-order/:id", auth(["user"]), createOrder);
+router.post("/capture-order", auth(["user"]), captureOrder);
 router.get("/", auth(["admin"]), getAllPayments);
-router.get("/payment-success", paymentSuccess);
 
 module.exports = router;

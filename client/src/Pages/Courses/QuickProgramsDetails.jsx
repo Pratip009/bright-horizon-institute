@@ -1,3 +1,4 @@
+/* Updated frontend component with PayPal integration */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -7,8 +8,8 @@ import {
   FaHourglassHalf,
   FaClipboardList,
 } from "react-icons/fa";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import SpinnerLoader from "../../components/Loader";
-import jwt_decode from "jwt-decode"; // static import works with Vite
 
 const QuickProgramsDetails = () => {
   const { id } = useParams();
@@ -18,12 +19,14 @@ const QuickProgramsDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const API_URL =
     import.meta.env.VITE_API_URL ||
     "https://bright-horizon-institute-2.onrender.com";
+  const clientId =
+    "AU2Zk1eX5T24Nd_uEwp6uu0i-0pSAeonc6v5b8uAa2NrE00_gZZ34bPUHTSbeWaGKqnSnxWq-nLChD18"; // Add this to your .env file
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsSignedIn(!!token);
@@ -40,6 +43,7 @@ const QuickProgramsDetails = () => {
       } catch (err) {
         console.error("Fetch program error:", err);
         setProgram(null);
+        setErrorMessage("Program not found or failed to load");
       } finally {
         setLoading(false);
       }
@@ -48,78 +52,6 @@ const QuickProgramsDetails = () => {
     fetchProgram();
   }, [id, API_URL]);
 
-  const handlePayment = async () => {
-    const token = localStorage.getItem("token");
-    console.log("Token sent to backend:", token);
-    if (!token) {
-      setErrorMessage("Please log in to proceed with payment");
-      return navigate("/login");
-    }
-
-    let userId;
-    try {
-      const decoded = jwt_decode(token);
-      userId = decoded.id || decoded._id;
-      console.log("Decoded token:", decoded);
-    } catch (err) {
-      console.error("Invalid token", err);
-      setErrorMessage("Session expired or invalid. Please log in again.");
-      localStorage.removeItem("token");
-      setPaymentLoading(false);
-      return navigate("/login");
-    }
-
-    if (!program.price || isNaN(program.price)) {
-      setErrorMessage("Invalid course price");
-      setPaymentLoading(false);
-      return;
-    }
-
-    setErrorMessage(null);
-    setPaymentLoading(true);
-
-    try {
-      const res = await fetch(`${API_URL}/api/payment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          amount: program.price,
-          userId,
-          courseId: program._id,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("Backend error:", data);
-        setErrorMessage(
-          data.message || "Payment request failed. Please try again."
-        );
-        if (data.message.includes("Token")) {
-          localStorage.removeItem("token");
-          return navigate("/login");
-        }
-        throw new Error(data.message || "Payment request failed");
-      }
-
-      if (data.approval_url) {
-        window.location.href = data.approval_url;
-      } else {
-        throw new Error("PayPal approval URL missing from response");
-      }
-    } catch (err) {
-      console.error("Payment error:", err);
-      setErrorMessage(
-        err.message || "Failed to initiate payment. Please try again."
-      );
-    } finally {
-      setPaymentLoading(false);
-    }
-  };
   const handleEnrollClick = () => {
     if (!isSignedIn) {
       navigate("/login");
@@ -134,6 +66,7 @@ const QuickProgramsDetails = () => {
         <SpinnerLoader size={48} />
       </div>
     );
+
   if (!program)
     return (
       <div className="text-center mt-12 text-gray-600 font-medium">
@@ -151,6 +84,7 @@ const QuickProgramsDetails = () => {
     description,
     content,
   } = program;
+
   const displayPrerequisite = prerequisite?.trim() || "Nothing";
 
   return (
@@ -160,9 +94,8 @@ const QuickProgramsDetails = () => {
           {errorMessage}
         </div>
       )}
-
       <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12">
-        {/* Left: Image + Tabs */}
+        {/* Left Content */}
         <div className="lg:w-2/3 w-full space-y-6">
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
             <img
@@ -176,6 +109,7 @@ const QuickProgramsDetails = () => {
             </h1>
           </div>
 
+          {/* Tabs */}
           <div className="flex justify-center space-x-6 border-b border-gray-300 mb-4">
             {["description", "contents", "duration"].map((tab) => (
               <button
@@ -192,6 +126,7 @@ const QuickProgramsDetails = () => {
             ))}
           </div>
 
+          {/* Tab content */}
           <div>
             {activeTab === "description" && (
               <div
@@ -230,7 +165,7 @@ const QuickProgramsDetails = () => {
           </div>
         </div>
 
-        {/* Right: Sidebar Info */}
+        {/* Right Sidebar */}
         <div className="lg:w-1/3 w-full bg-white p-6 rounded-2xl shadow-lg self-start">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900">
             {title}
@@ -275,13 +210,85 @@ const QuickProgramsDetails = () => {
             </button>
           ) : (
             <div className="flex flex-col gap-3">
-              <button
-                onClick={handlePayment}
-                disabled={paymentLoading}
-                className="w-full py-2 rounded-lg text-white font-semibold text-center text-lg bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-600 shadow hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 hover:scale-105"
-              >
-                {paymentLoading ? "Processing..." : `Pay Full $${price}`}
-              </button>
+              {clientId ? (
+                <PayPalScriptProvider options={{ clientId }}>
+                  <PayPalButtons
+                    style={{ layout: "vertical" }}
+                    createOrder={async () => {
+                      try {
+                        const response = await fetch(
+                          `${API_URL}/api/payments/create-order/${id}`,
+                          {
+                            method: "POST",
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                              "Content-Type": "application/json",
+                            },
+                          }
+                        );
+
+                        if (!response.ok) {
+                          throw new Error("Failed to create order");
+                        }
+
+                        const data = await response.json();
+
+                        // Make sure to return the order ID
+                        // If your server returns { id: "..." } use data.id
+                        // If it returns { orderID: "..." } use data.orderID
+                        return data.id || data.orderID;
+                      } catch (err) {
+                        console.error("Create order error:", err);
+                        alert("Failed to initiate payment");
+                        // Returning null prevents PayPal from proceeding
+                        return null;
+                      }
+                    }}
+                    onApprove={async (data) => {
+                      try {
+                        const response = await fetch(
+                          `${API_URL}/api/payments/capture-order`,
+                          {
+                            method: "POST",
+                            headers: {
+                              Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                              )}`,
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ orderID: data.orderID }),
+                          }
+                        );
+
+                        if (!response.ok) {
+                          throw new Error("Failed to capture order");
+                        }
+
+                        const result = await response.json();
+                        if (result.status === "success") {
+                          alert("Payment successful! You are now enrolled.");
+                          setShowPaymentOptions(false);
+                        } else {
+                          alert("Payment capture failed");
+                        }
+                      } catch (err) {
+                        console.error("Capture order error:", err);
+                        alert("An error occurred during payment capture");
+                      }
+                    }}
+                    onError={(err) => {
+                      console.error("PayPal error:", err);
+                      alert("An error occurred with PayPal");
+                    }}
+                  />
+                </PayPalScriptProvider>
+              ) : (
+                <p className="text-red-500 text-center">
+                  PayPal Client ID not configured.
+                </p>
+              )}
             </div>
           )}
         </div>
