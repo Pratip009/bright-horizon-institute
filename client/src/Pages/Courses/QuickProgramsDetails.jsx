@@ -17,16 +17,16 @@ const QuickProgramsDetails = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [loading, setLoading] = useState(true);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false); // false | 'full' | 'partial'
   const [errorMessage, setErrorMessage] = useState(null);
-  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [partialPaymentAmount, setPartialPaymentAmount] = useState(500);
+  const [hasPaid, setHasPaid] = useState(false);
 
   const API_URL =
     import.meta.env.VITE_API_URL ||
     "https://bright-horizon-institute-2.onrender.com";
   const clientId =
-    import.meta.env.VITE_PAYPAL_CLIENT_ID ||
-    "YOUR_PAYPAL_CLIENT_ID_HERE"; // use env variable
+    "AU2Zk1eX5T24Nd_uEwp6uu0i-0pSAeonc6v5b8uAa2NrE00_gZZ34bPUHTSbeWaGKqnSnxWq-nLChD18";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -41,7 +41,9 @@ const QuickProgramsDetails = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setProgram(data);
-        setPaymentAmount(Math.max(500, data.price)); // default to min 500
+        setPartialPaymentAmount(
+          Math.min(Math.max(500, data.price), data.price)
+        );
       } catch (err) {
         console.error("Fetch program error:", err);
         setProgram(null);
@@ -51,17 +53,31 @@ const QuickProgramsDetails = () => {
       }
     };
 
+    const checkPaymentStatus = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch(`${API_URL}/api/payments/check/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setHasPaid(data.hasPaid);
+      } catch (err) {
+        console.error("Check payment error:", err);
+      }
+    };
+
     fetchProgram();
+    checkPaymentStatus();
   }, [id, API_URL]);
 
-  const handleEnrollClick = () => {
+  const handleEnrollClick = (type) => {
     if (!isSignedIn) navigate("/login");
-    else setShowPaymentOptions(true);
+    else setShowPaymentOptions(type); // 'full' or 'partial'
   };
 
-  const handleAmountChange = (e) => {
+  const handlePartialAmountChange = (e) => {
     const value = parseFloat(e.target.value);
-    if (!isNaN(value)) setPaymentAmount(value);
+    if (!isNaN(value)) setPartialPaymentAmount(value);
   };
 
   if (loading)
@@ -203,100 +219,114 @@ const QuickProgramsDetails = () => {
             />
           </div>
 
-          {!showPaymentOptions ? (
-            <button
-              className={`w-full py-3 px-4 text-white text-2xl font-semibold rounded-xl shadow-lg transition-transform duration-300 transform hover:-translate-y-1 hover:scale-105 ${
-                isSignedIn
-                  ? "bg-green-400 hover:bg-green-700"
-                  : "bg-blue-500 hover:bg-blue-700"
-              }`}
-              onClick={handleEnrollClick}
-            >
-              {isSignedIn ? "Enroll Now" : "Sign in to Enroll"}
-            </button>
+          {hasPaid ? (
+            <div className="text-green-600 font-semibold text-lg mt-4">
+              You have already paid for this course. We will contact you shortly.
+            </div>
+          ) : !showPaymentOptions ? (
+            <div className="flex flex-col gap-3">
+              {/* Full Payment Button */}
+              <button
+                className="w-full py-3 px-4 text-white text-2xl font-semibold rounded-xl shadow-lg bg-green-400 hover:bg-green-700 transition-transform duration-300 transform hover:-translate-y-1 hover:scale-105"
+                onClick={() => handleEnrollClick("full")}
+              >
+                Pay Full (${price})
+              </button>
+
+              {/* Partial Payment Button */}
+              <button
+                className="w-full py-3 px-4 text-white text-2xl font-semibold rounded-xl shadow-lg bg-orange-400 hover:bg-orange-600 transition-transform duration-300 transform hover:-translate-y-1 hover:scale-105"
+                onClick={() => handleEnrollClick("partial")}
+              >
+                Pay Partial (Min $500)
+              </button>
+            </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {/* Partial Payment Amount Input */}
-              <div className="mb-4">
-                <label className="block text-gray-700 mb-2">
-                  Enter amount to pay (minimum $500)
-                </label>
-                <input
-                  type="number"
-                  min="500"
-                  max={price}
-                  value={paymentAmount}
-                  onChange={handleAmountChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
+              {showPaymentOptions === "partial" && (
+                <div className="mb-4">
+                  <label className="block text-gray-700 mb-2">
+                    Enter partial payment amount ($500 - ${price})
+                  </label>
+                  <input
+                    type="number"
+                    min="500"
+                    max={price}
+                    value={partialPaymentAmount}
+                    onChange={handlePartialAmountChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                  {partialPaymentAmount < 500 && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Minimum amount is $500
+                    </p>
+                  )}
+                  {partialPaymentAmount > price && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Amount cannot exceed program price (${price})
+                    </p>
+                  )}
+                </div>
+              )}
 
-              {clientId ? (
+              {/* PayPal Button */}
+              {(showPaymentOptions === "full" ||
+                (showPaymentOptions === "partial" &&
+                  partialPaymentAmount >= 500 &&
+                  partialPaymentAmount <= price)) && (
                 <PayPalScriptProvider options={{ clientId }}>
                   <PayPalButtons
                     style={{ layout: "vertical" }}
                     createOrder={async () => {
-                      try {
-                        const response = await fetch(
-                          `${API_URL}/api/payments/create-order/${id}`,
-                          {
-                            method: "POST",
-                            headers: {
-                              Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                              )}`,
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({ amount: paymentAmount }),
-                          }
-                        );
+                      const amount =
+                        showPaymentOptions === "full"
+                          ? price
+                          : partialPaymentAmount;
 
-                        if (!response.ok)
-                          throw new Error("Failed to create order");
+                      const response = await fetch(
+                        `${API_URL}/api/payments/create-order/${id}`,
+                        {
+                          method: "POST",
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              "token"
+                            )}`,
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ amount }),
+                        }
+                      );
 
-                        const data = await response.json();
-                        console.log("Order created:", data);
+                      if (!response.ok)
+                        throw new Error("Failed to create order");
 
-                        return data.orderID;
-                      } catch (err) {
-                        console.error("Create order error:", err);
-                        alert("Failed to initiate payment");
-                        return null;
-                      }
+                      const data = await response.json();
+                      return data.orderID;
                     }}
                     onApprove={async (data) => {
-                      try {
-                        console.log("Order approved by user:", data);
+                      const response = await fetch(
+                        `${API_URL}/api/payments/capture-order`,
+                        {
+                          method: "POST",
+                          headers: {
+                            Authorization: `Bearer ${localStorage.getItem(
+                              "token"
+                            )}`,
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            orderID: data.orderID,
+                            programID: id,
+                          }),
+                        }
+                      );
 
-                        const response = await fetch(
-                          `${API_URL}/api/payments/capture-order`,
-                          {
-                            method: "POST",
-                            headers: {
-                              Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                              )}`,
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              orderID: data.orderID,
-                              programID: id,
-                            }),
-                          }
-                        );
+                      if (!response.ok)
+                        throw new Error("Failed to capture order");
 
-                        if (!response.ok)
-                          throw new Error("Failed to capture order");
-
-                        const result = await response.json();
-                        console.log("Payment captured result:", result);
-
-                        alert("Payment successful! You are now enrolled.");
-                        setShowPaymentOptions(false);
-                      } catch (err) {
-                        console.error("Capture order error:", err);
-                        alert("Payment capture failed");
-                      }
+                      await response.json();
+                      alert("Payment successful! You are now enrolled.");
+                      setShowPaymentOptions(false);
                     }}
                     onError={(err) => {
                       console.error("PayPal error:", err);
@@ -304,10 +334,6 @@ const QuickProgramsDetails = () => {
                     }}
                   />
                 </PayPalScriptProvider>
-              ) : (
-                <p className="text-red-500 text-center">
-                  PayPal Client ID not configured.
-                </p>
               )}
             </div>
           )}

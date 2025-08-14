@@ -50,7 +50,9 @@ const captureOrder = async (req, res) => {
     const userId = req.user.id;
 
     if (!orderID || !programID)
-      return res.status(400).json({ error: "Order ID and Program ID are required" });
+      return res
+        .status(400)
+        .json({ error: "Order ID and Program ID are required" });
 
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     request.requestBody({});
@@ -70,7 +72,10 @@ const captureOrder = async (req, res) => {
     });
 
     await payment.save();
-    res.json({ message: "Payment captured and saved successfully", capture: capture.result });
+    res.json({
+      message: "Payment captured and saved successfully",
+      capture: capture.result,
+    });
   } catch (err) {
     console.error("PayPal capture error:", err);
     res.status(500).json({ error: "Failed to capture payment" });
@@ -89,5 +94,27 @@ const getAllPayments = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch payments" });
   }
 };
+const checkUserPayment = async (req, res) => {
+  try {
+    const { programID } = req.params;
+    const userId = req.user.id;
 
-module.exports = { createOrder, captureOrder, getAllPayments };
+    const existingPayment = await Payment.findOne({
+      user: userId,
+      program: programID,
+      status: "COMPLETED", // or whatever PayPal returns for success
+    });
+
+    res.json({ hasPaid: !!existingPayment });
+  } catch (err) {
+    console.error("Error checking payment:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = {
+  createOrder,
+  captureOrder,
+  getAllPayments,
+  checkUserPayment,
+};
