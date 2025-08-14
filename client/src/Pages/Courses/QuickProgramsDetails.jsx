@@ -1,4 +1,3 @@
-/* Updated frontend component with PayPal integration */
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -20,12 +19,14 @@ const QuickProgramsDetails = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [paymentAmount, setPaymentAmount] = useState(0);
 
   const API_URL =
     import.meta.env.VITE_API_URL ||
     "https://bright-horizon-institute-2.onrender.com";
   const clientId =
-    "AU2Zk1eX5T24Nd_uEwp6uu0i-0pSAeonc6v5b8uAa2NrE00_gZZ34bPUHTSbeWaGKqnSnxWq-nLChD18"; // Add this to your .env file
+    import.meta.env.VITE_PAYPAL_CLIENT_ID ||
+    "YOUR_PAYPAL_CLIENT_ID_HERE"; // use env variable
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -40,6 +41,7 @@ const QuickProgramsDetails = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setProgram(data);
+        setPaymentAmount(Math.max(500, data.price)); // default to min 500
       } catch (err) {
         console.error("Fetch program error:", err);
         setProgram(null);
@@ -53,11 +55,13 @@ const QuickProgramsDetails = () => {
   }, [id, API_URL]);
 
   const handleEnrollClick = () => {
-    if (!isSignedIn) {
-      navigate("/login");
-    } else {
-      setShowPaymentOptions(true);
-    }
+    if (!isSignedIn) navigate("/login");
+    else setShowPaymentOptions(true);
+  };
+
+  const handleAmountChange = (e) => {
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value)) setPaymentAmount(value);
   };
 
   if (loading)
@@ -94,6 +98,7 @@ const QuickProgramsDetails = () => {
           {errorMessage}
         </div>
       )}
+
       <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12">
         {/* Left Content */}
         <div className="lg:w-2/3 w-full space-y-6">
@@ -170,7 +175,8 @@ const QuickProgramsDetails = () => {
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900">
             {title}
           </h2>
-          <div className="flex flex-col gap-4 mb-6">
+
+          <div className="flex flex-col gap-4 mb-4">
             <InfoCard
               icon={<FaDollarSign />}
               label="Price"
@@ -210,6 +216,21 @@ const QuickProgramsDetails = () => {
             </button>
           ) : (
             <div className="flex flex-col gap-3">
+              {/* Partial Payment Amount Input */}
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">
+                  Enter amount to pay (minimum $500)
+                </label>
+                <input
+                  type="number"
+                  min="500"
+                  max={price}
+                  value={paymentAmount}
+                  onChange={handleAmountChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+
               {clientId ? (
                 <PayPalScriptProvider options={{ clientId }}>
                   <PayPalButtons
@@ -226,6 +247,7 @@ const QuickProgramsDetails = () => {
                               )}`,
                               "Content-Type": "application/json",
                             },
+                            body: JSON.stringify({ amount: paymentAmount }),
                           }
                         );
 
@@ -235,7 +257,7 @@ const QuickProgramsDetails = () => {
                         const data = await response.json();
                         console.log("Order created:", data);
 
-                        return data.orderID; // PayPal needs this
+                        return data.orderID;
                       } catch (err) {
                         console.error("Create order error:", err);
                         alert("Failed to initiate payment");
