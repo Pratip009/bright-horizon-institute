@@ -229,25 +229,23 @@ const QuickProgramsDetails = () => {
                           }
                         );
 
-                        if (!response.ok) {
+                        if (!response.ok)
                           throw new Error("Failed to create order");
-                        }
 
                         const data = await response.json();
+                        console.log("Order created:", data);
 
-                        // Make sure to return the order ID
-                        // If your server returns { id: "..." } use data.id
-                        // If it returns { orderID: "..." } use data.orderID
-                        return data.id || data.orderID;
+                        return data.orderID; // PayPal needs this
                       } catch (err) {
                         console.error("Create order error:", err);
                         alert("Failed to initiate payment");
-                        // Returning null prevents PayPal from proceeding
                         return null;
                       }
                     }}
                     onApprove={async (data) => {
                       try {
+                        console.log("Order approved by user:", data);
+
                         const response = await fetch(
                           `${API_URL}/api/payments/capture-order`,
                           {
@@ -258,24 +256,24 @@ const QuickProgramsDetails = () => {
                               )}`,
                               "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({ orderID: data.orderID }),
+                            body: JSON.stringify({
+                              orderID: data.orderID,
+                              programID: id,
+                            }),
                           }
                         );
 
-                        if (!response.ok) {
+                        if (!response.ok)
                           throw new Error("Failed to capture order");
-                        }
 
                         const result = await response.json();
-                        if (result.status === "success") {
-                          alert("Payment successful! You are now enrolled.");
-                          setShowPaymentOptions(false);
-                        } else {
-                          alert("Payment capture failed");
-                        }
+                        console.log("Payment captured result:", result);
+
+                        alert("Payment successful! You are now enrolled.");
+                        setShowPaymentOptions(false);
                       } catch (err) {
                         console.error("Capture order error:", err);
-                        alert("An error occurred during payment capture");
+                        alert("Payment capture failed");
                       }
                     }}
                     onError={(err) => {
