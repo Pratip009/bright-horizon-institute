@@ -31,7 +31,7 @@ const CourseDetail = () => {
     setIsSignedIn(!!token);
 
     // Fetch courses
-    fetch(`${API_URL}/courses`)
+    fetch(`${API_URL}/api/courses`)
       .then((response) => response.json())
       .then((data) => {
         const selectedCourse = data.find((course) => course._id === id);
